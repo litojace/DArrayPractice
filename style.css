@@ -3582,3 +3582,163 @@ body.resizing-panels
             none;
     }
 }
+
+/* ========================================= */
+/* BUTTON INTERACTION POLISH                 */
+/* ========================================= */
+
+
+/* Run Tests */
+
+.run-button
+{
+    transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        opacity 0.16s ease;
+}
+
+
+.run-button:hover:not(:disabled)
+{
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 6px 14px
+        rgba(76, 101, 210, 0.24);
+}
+
+
+.run-button:active:not(:disabled)
+{
+    transform:
+        translateY(0)
+        scale(0.98);
+}
+
+
+
+/* Reset Code */
+
+.reset-button
+{
+    transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        background 0.16s ease;
+}
+
+
+.reset-button:hover:not(:disabled)
+{
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(15, 23, 42, 0.08);
+}
+
+
+.reset-button:active:not(:disabled)
+{
+    transform:
+        translateY(0)
+        scale(0.98);
+}
+
+
+
+/* Previous / Next */
+
+#previous,
+#next
+{
+    transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        opacity 0.16s ease;
+}
+
+
+#previous:hover:not(:disabled),
+#next:hover:not(:disabled)
+{
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 4px 9px
+        rgba(15, 23, 42, 0.08);
+}
+
+
+#previous:active:not(:disabled),
+#next:active:not(:disabled)
+{
+    transform:
+        translateY(0)
+        scale(0.97);
+}
+
+
+
+/* Problem-number circles */
+
+.problem-step
+{
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease;
+}
+
+
+.problem-step:hover:not(:disabled)
+{
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 4px 9px
+        rgba(15, 23, 42, 0.08);
+}
+
+
+.problem-step.current
+{
+    box-shadow:
+        0 0 0 3px
+        rgba(85, 111, 222, 0.10);
+}
+
+
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce)
+{
+    .run-button,
+    .reset-button,
+    #previous,
+    #next,
+    .problem-step
+    {
+        transition:
+            none;
+    }
+
+
+    .run-button:hover:not(:disabled),
+    .reset-button:hover:not(:disabled),
+    #previous:hover:not(:disabled),
+    #next:hover:not(:disabled),
+    .problem-step:hover:not(:disabled)
+    {
+        transform:
+            none;
+    }
+}
