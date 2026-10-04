@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>DArray Practice</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/codemirror.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/theme/material-darker.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+<body>
+
+    <header>
+        <div class="header-content">
+
+            <h1>
+                C++2 DArray Practice
+            </h1>
+
+            <p>
+                Practice your DArray member functions with Jacen 💗
+            </p>
+
+        </div>
+    </header>
+
+
+    <main>
+
+        <!-- ================================= -->
+        <!-- PROBLEM                           -->
+        <!-- ================================= -->
+
+        <section class="card">
+
+            <div class="navigation">
+
+                <button id="previous">
+                    ← Previous
+                </button>
+
+                <strong id="problem-number">
+                    Problem 1 of 9
+                </strong>
+
+                <button id="next">
+                    Next →
+                </button>
+
+            </div>
+
+
+            <h2 id="problem-title"></h2>
+
+
+            <p id="problem-description"></p>
+
+
+            <p>
+                <strong>Parameters:</strong>
+                <span id="parameters"></span>
+            </p>
+
+
+            <p>
+                <strong>Return type:</strong>
+                <span id="return-type"></span>
+            </p>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- DARRAY.H REFERENCE                -->
+        <!-- ================================= -->
+
+        <section class="card reference-card">
+
+            <details>
+
+                <summary>
+                    DArray.h Reference
+                </summary>
+
+
+                <div class="reference-description">
+
+                    <p>
+                        You may use this class definition as a reference
+                        while writing your member function.
+                    </p>
+
+                </div>
+
+
+                <pre class="reference-code"><code>#ifndef DARRAY_H
+#define DARRAY_H
+
+const int CAP = 50;
+
+class DArray
+{
+public:
+    DArray();
+    DArray(int newCapacity);
+
+    void addElement(int newElement);
+    int getNumOfElements() const;
+    void replaceElementAt(int newElement, int idx);
+    bool compareArrays(const DArray&amp; otherArray) const;
+    void printArray() const;
+
+    ~DArray();
+
+private:
+    int* a;
+    int capacity;
+    int numOfElements;
+};
+
+#endif</code></pre>
+
+            </details>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- CODE EDITOR                       -->
+        <!-- ================================= -->
+
+        <section class="card">
+
+            <div class="editor-heading">
+
+                <h3>
+                    Your Code
+                </h3>
+
+                <span class="language-label">
+                    C++
+                </span>
+
+            </div>
+
+
+            <textarea
+                id="code"
+                spellcheck="false"
+            ></textarea>
+
+
+            <div class="button-row">
+
+                <button id="run">
+                    ▶ Run Tests
+                </button>
+
+                <button
+                    id="reset"
+                    class="secondary"
+                >
+                    Reset Code
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================================= -->
+        <!-- TEST RESULTS                      -->
+        <!-- ================================= -->
+
+        <section class="card">
+
+            <h3>
+                Test Results
+            </h3>
+
+            <div id="results">
+                No tests have been run yet.
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ===================================== -->
+    <!-- CODEMIRROR                            -->
+    <!-- ===================================== -->
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/codemirror.min.js"
+    ></script>
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/mode/clike/clike.min.js"
+    ></script>
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/addon/edit/closebrackets.min.js"
+    ></script>
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/addon/edit/matchbrackets.min.js"
+    ></script>
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.19/addon/selection/active-line.min.js"
+    ></script>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

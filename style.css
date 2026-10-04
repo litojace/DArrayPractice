@@ -1,0 +1,459 @@
+/* ========================================= */
+/* GENERAL                                   */
+/* ========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+
+    background-color: #f4f6f8;
+
+    color: #1f2937;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    line-height: 1.6;
+}
+
+
+
+/* ========================================= */
+/* HEADER                                    */
+/* ========================================= */
+
+header {
+    background-color: #243e6a;
+
+    color: white;
+
+    padding: 26px 20px;
+}
+
+
+.header-content {
+    width: min(1000px, 92%);
+
+    margin: 0 auto;
+}
+
+
+header h1 {
+    margin: 0;
+
+    font-size: 30px;
+}
+
+
+header p {
+    margin: 4px 0 0;
+
+    opacity: 0.9;
+}
+
+
+
+/* ========================================= */
+/* MAIN                                      */
+/* ========================================= */
+
+main {
+    width: min(1000px, 92%);
+
+    margin: 30px auto 50px;
+}
+
+
+
+/* ========================================= */
+/* CARDS                                     */
+/* ========================================= */
+
+.card {
+    background-color: white;
+
+    border-radius: 10px;
+
+    padding: 24px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 2px 8px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+.card h2,
+.card h3 {
+    margin-top: 0;
+}
+
+
+
+/* ========================================= */
+/* NAVIGATION                                */
+/* ========================================= */
+
+.navigation {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 24px;
+}
+
+
+#problem-number {
+    text-align: center;
+}
+
+
+
+/* ========================================= */
+/* BUTTONS                                   */
+/* ========================================= */
+
+button {
+    border: none;
+
+    border-radius: 6px;
+
+    padding: 10px 18px;
+
+    background-color: #243e6a;
+
+    color: white;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition:
+        opacity 0.15s,
+        transform 0.05s;
+}
+
+
+button:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+
+button:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+
+button:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+
+
+button.secondary {
+    background-color: #6b7280;
+}
+
+
+
+/* ========================================= */
+/* DARRAY.H REFERENCE                        */
+/* ========================================= */
+
+.reference-card {
+    padding: 0;
+
+    overflow: hidden;
+}
+
+
+.reference-card details {
+    width: 100%;
+}
+
+
+.reference-card summary {
+    padding: 18px 24px;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    color: #243e6a;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    list-style-position: inside;
+}
+
+
+.reference-card summary:hover {
+    background-color: #f8fafc;
+}
+
+
+.reference-card details[open] summary {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+
+.reference-description {
+    padding: 10px 24px 0;
+}
+
+
+.reference-description p {
+    margin-bottom: 10px;
+
+    color: #4b5563;
+}
+
+
+.reference-code {
+    margin: 0 24px 24px;
+
+    padding: 20px;
+
+    overflow-x: auto;
+
+    border-radius: 8px;
+
+    background-color: #212121;
+
+    color: #f8f8f2;
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-size: 16px;
+
+    line-height: 1.5;
+
+    tab-size: 4;
+}
+
+
+
+/* ========================================= */
+/* EDITOR                                    */
+/* ========================================= */
+
+.editor-heading {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+
+
+.editor-heading h3 {
+    margin: 0;
+}
+
+
+.language-label {
+    padding: 4px 10px;
+
+    border-radius: 5px;
+
+    background-color: #e5e7eb;
+
+    color: #374151;
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+
+.CodeMirror {
+    height: 330px;
+
+    border-radius: 8px;
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-size: 18px;
+
+    line-height: 1.5;
+}
+
+
+.CodeMirror-linenumber {
+    font-size: 16px;
+}
+
+
+
+/* ========================================= */
+/* BUTTON ROW                                */
+/* ========================================= */
+
+.button-row {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 16px;
+}
+
+
+
+/* ========================================= */
+/* TEST RESULTS                              */
+/* ========================================= */
+
+#results {
+    overflow-wrap: break-word;
+}
+
+
+.test-pass,
+.test-fail {
+    margin-bottom: 12px;
+
+    padding: 14px;
+
+    border-radius: 6px;
+}
+
+
+.test-pass {
+    background-color: #ecfdf5;
+
+    border-left: 4px solid #16a34a;
+}
+
+
+.test-fail {
+    background-color: #fef2f2;
+
+    border-left: 4px solid #dc2626;
+}
+
+
+.compile-error {
+    padding: 14px;
+
+    border-radius: 6px;
+
+    background-color: #fef2f2;
+
+    border-left: 4px solid #dc2626;
+}
+
+
+.compile-error pre {
+    overflow-x: auto;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+}
+
+
+
+/* ========================================= */
+/* MOBILE                                    */
+/* ========================================= */
+
+@media (max-width: 650px) {
+
+    header h1 {
+        font-size: 25px;
+    }
+
+
+    .card {
+        padding: 18px;
+    }
+
+
+    .navigation {
+        gap: 8px;
+    }
+
+
+    .navigation button {
+        padding: 9px 12px;
+
+        font-size: 13px;
+    }
+
+
+    #problem-number {
+        font-size: 14px;
+    }
+
+
+    .CodeMirror {
+        height: 300px;
+
+        font-size: 16px;
+    }
+
+
+    .CodeMirror-linenumber {
+        font-size: 14px;
+    }
+
+
+    .reference-card {
+        padding: 0;
+    }
+
+
+    .reference-card summary {
+        padding: 16px 18px;
+    }
+
+
+    .reference-description {
+        padding-left: 18px;
+
+        padding-right: 18px;
+    }
+
+
+    .reference-code {
+        margin-left: 18px;
+
+        margin-right: 18px;
+
+        padding: 16px;
+
+        font-size: 14px;
+    }
+
+
+    .button-row {
+        flex-direction: column;
+    }
+
+
+    .button-row button {
+        width: 100%;
+    }
+}
