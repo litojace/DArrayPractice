@@ -1155,6 +1155,31 @@ function restoreResultState(
 
 function loadProblem()
 {
+    document.body.classList.remove(
+        "problem-changing"
+    );
+
+
+    void document.body.offsetWidth;
+
+
+    document.body.classList.add(
+        "problem-changing"
+    );
+
+
+    setTimeout(
+        () =>
+        {
+            document.body.classList.remove(
+                "problem-changing"
+            );
+        },
+
+        350
+    );
+
+
     const problem =
         problems[currentProblem];
 
@@ -2467,6 +2492,45 @@ async function gradeOutput(
         );
 
 
+
+if (
+    passed ===
+    problem.tests.length
+)
+{
+    summary.className =
+        "result-summary all-passed";
+
+
+    summary.innerHTML =
+        `
+            <div class="success-summary-left">
+
+                <div class="success-summary-icon">
+                    ✓
+                </div>
+
+                <div>
+                    <span class="success-summary-title">
+                        All tests passed!
+                    </span>
+
+                    <span class="success-summary-subtitle">
+                        Nice work — your solution passed every test.
+                    </span>
+                </div>
+
+            </div>
+
+            <strong>
+                ${passed} /
+                ${problem.tests.length}
+            </strong>
+        `;
+}
+
+else
+{
     summary.className =
         "result-summary";
 
@@ -2483,11 +2547,12 @@ async function gradeOutput(
                 passed
             </strong>
         `;
+}
 
 
-    results.appendChild(
-        summary
-    );
+results.appendChild(
+    summary
+);
 
 
     const wasAlreadyCompleted =

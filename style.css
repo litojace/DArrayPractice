@@ -3019,3 +3019,566 @@ body.resizing-panels
     font-weight:
         750;
 }
+
+/* ========================================= */
+/* FINAL UI POLISH                           */
+/* ========================================= */
+
+
+/* ========================================= */
+/* PROBLEM TRANSITION                        */
+/* ========================================= */
+
+.problem-changing .problem-scroll
+{
+    animation:
+        problemContentEnter
+        0.32s
+        ease
+        both;
+}
+
+
+@keyframes problemContentEnter
+{
+    from
+    {
+        opacity:
+            0;
+
+        transform:
+            translateY(5px);
+    }
+
+    to
+    {
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+
+/* ========================================= */
+/* EDITOR TRANSITION                         */
+/* ========================================= */
+
+.problem-changing .CodeMirror
+{
+    animation:
+        editorEnter
+        0.28s
+        ease
+        both;
+}
+
+
+@keyframes editorEnter
+{
+    from
+    {
+        opacity:
+            0.88;
+    }
+
+    to
+    {
+        opacity:
+            1;
+    }
+}
+
+
+
+/* ========================================= */
+/* RUN BUTTON POLISH                         */
+/* ========================================= */
+
+.run-button
+{
+    transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        background 0.16s ease,
+        opacity 0.16s ease;
+}
+
+
+.run-button:hover:not(:disabled)
+{
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 6px 14px
+        rgba(76, 101, 210, 0.24);
+}
+
+
+.run-button:active:not(:disabled)
+{
+    transform:
+        translateY(0)
+        scale(0.98);
+
+    box-shadow:
+        0 3px 8px
+        rgba(76, 101, 210, 0.18);
+}
+
+
+
+/* ========================================= */
+/* RESET BUTTON POLISH                       */
+/* ========================================= */
+
+.reset-button
+{
+    transition:
+        transform 0.16s ease,
+        background 0.16s ease,
+        border-color 0.16s ease,
+        box-shadow 0.16s ease;
+}
+
+
+.reset-button:hover:not(:disabled)
+{
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 4px 10px
+        rgba(15, 23, 42, 0.07);
+}
+
+
+.reset-button:active:not(:disabled)
+{
+    transform:
+        translateY(0)
+        scale(0.98);
+}
+
+
+
+/* ========================================= */
+/* PREVIOUS / NEXT POLISH                    */
+/* ========================================= */
+
+#previous,
+#next
+{
+    transition:
+        transform 0.16s ease,
+        background 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease,
+        opacity 0.16s ease;
+}
+
+
+#previous:hover:not(:disabled),
+#next:hover:not(:disabled)
+{
+    transform:
+        translateY(-1px);
+}
+
+
+#previous:active:not(:disabled),
+#next:active:not(:disabled)
+{
+    transform:
+        translateY(0)
+        scale(0.97);
+}
+
+
+
+/* ========================================= */
+/* PROBLEM CIRCLE POLISH                     */
+/* ========================================= */
+
+.problem-step
+{
+    transition:
+        transform 0.18s ease,
+        background 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+.problem-step:hover:not(:disabled)
+{
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 4px 9px
+        rgba(15, 23, 42, 0.08);
+}
+
+
+.problem-step.current
+{
+    box-shadow:
+        0 0 0 3px
+        rgba(85, 111, 222, 0.10);
+}
+
+
+
+/* ========================================= */
+/* EMPTY TEST RESULTS                        */
+/* ========================================= */
+
+.empty-results
+{
+    animation:
+        emptyResultsEnter
+        0.3s
+        ease
+        both;
+}
+
+
+@keyframes emptyResultsEnter
+{
+    from
+    {
+        opacity:
+            0;
+
+        transform:
+            translateY(4px);
+    }
+
+    to
+    {
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+.empty-results-icon
+{
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+.empty-results:hover .empty-results-icon
+{
+    transform:
+        translateY(-2px);
+}
+
+
+
+/* ========================================= */
+/* TEST RESULT CARD HOVER                    */
+/* ========================================= */
+
+.test-pass,
+.test-fail
+{
+    transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease;
+}
+
+
+.test-pass:hover,
+.test-fail:hover
+{
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 5px 12px
+        rgba(15, 23, 42, 0.06);
+}
+
+
+
+/* ========================================= */
+/* TEST PROGRESS BAR                         */
+/* ========================================= */
+
+#test-progress-bar
+{
+    transition:
+        width 0.35s ease;
+}
+
+
+
+/* ========================================= */
+/* ALL TESTS PASSED                          */
+/* ========================================= */
+
+.result-summary.all-passed
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        16px;
+
+    padding:
+        13px
+        15px;
+
+    border:
+        1px solid
+        #cce7d3;
+
+    border-radius:
+        9px;
+
+    background:
+        #f3fbf5;
+
+    animation:
+        successSummaryEnter
+        0.4s
+        ease
+        both;
+}
+
+
+.success-summary-left
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+}
+
+
+.success-summary-icon
+{
+    width:
+        31px;
+
+    height:
+        31px;
+
+    flex:
+        0
+        0
+        31px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #dcefe1;
+
+    color:
+        #318348;
+
+    font-size:
+        16px;
+
+    font-weight:
+        900;
+
+    animation:
+        successCheckEnter
+        0.55s
+        ease
+        both;
+}
+
+
+.success-summary-title
+{
+    display:
+        block;
+
+    color:
+        #28733c;
+
+    font-size:
+        12px;
+
+    font-weight:
+        850;
+}
+
+
+.success-summary-subtitle
+{
+    display:
+        block;
+
+    margin-top:
+        2px;
+
+    color:
+        #698071;
+
+    font-size:
+        10px;
+
+    line-height:
+        1.45;
+}
+
+
+.result-summary.all-passed strong
+{
+    flex:
+        0
+        0
+        auto;
+
+    color:
+        #318348;
+
+    font-size:
+        14px;
+
+    font-weight:
+        900;
+}
+
+
+
+/* ========================================= */
+/* SUCCESS ANIMATIONS                        */
+/* ========================================= */
+
+@keyframes successSummaryEnter
+{
+    from
+    {
+        opacity:
+            0;
+
+        transform:
+            translateY(6px);
+    }
+
+    to
+    {
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+@keyframes successCheckEnter
+{
+    0%
+    {
+        opacity:
+            0;
+
+        transform:
+            scale(0.5)
+            rotate(-15deg);
+    }
+
+    55%
+    {
+        opacity:
+            1;
+
+        transform:
+            scale(1.14)
+            rotate(3deg);
+    }
+
+    100%
+    {
+        opacity:
+            1;
+
+        transform:
+            scale(1)
+            rotate(0);
+    }
+}
+
+
+
+/* ========================================= */
+/* RESULT SUMMARY                            */
+/* ========================================= */
+
+.result-summary
+{
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+
+/* ========================================= */
+/* ACCESSIBILITY                             */
+/* ========================================= */
+
+@media (prefers-reduced-motion: reduce)
+{
+    .problem-changing .problem-scroll,
+    .problem-changing .CodeMirror,
+    .empty-results,
+    .result-summary.all-passed,
+    .success-summary-icon,
+    .problem-step.just-completed,
+    .problem-step.just-completed::before
+    {
+        animation:
+            none;
+    }
+
+
+    .run-button,
+    .reset-button,
+    #previous,
+    #next,
+    .problem-step,
+    .test-pass,
+    .test-fail,
+    #test-progress-bar
+    {
+        transition:
+            none;
+    }
+}
