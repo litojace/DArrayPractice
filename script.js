@@ -464,7 +464,263 @@ const problems =
     }
 ];
 
+/* ========================================= */
+/* PROBLEM HINTS                             */
+/* ========================================= */
 
+const problemHints =
+{
+    deleteSecond:
+    [
+        {
+            type:
+                "Concept",
+
+            text:
+                "Deleting an element from an array means the elements after it must shift left to fill the empty position."
+        },
+
+        {
+            type:
+                "Approach",
+
+            text:
+                "The second element is at index 1. Starting there, move each following value one position to the left. After the shifting is finished, the logical number of elements must decrease."
+        },
+
+        {
+            type:
+                "Code Structure",
+
+            text:
+                "Think about a for loop that starts at index 1. During each iteration, copy a[i + 1] into a[i]. Make sure the loop stops before a[i + 1] would go beyond the last valid element. Then update numOfElements."
+        }
+    ],
+
+
+    swapSecondLast:
+    [
+        {
+            type:
+                "Concept",
+
+            text:
+                "Swapping two array elements means preserving one value temporarily while the other value is moved."
+        },
+
+        {
+            type:
+                "Approach",
+
+            text:
+                "The second element is at index 1. The last element is at index numOfElements - 1. Exchange the values stored at those two positions."
+        },
+
+        {
+            type:
+                "Code Structure",
+
+            text:
+                "Use one temporary integer. Save the value at index 1, assign the last element into index 1, and then place the saved value into the last position."
+        }
+    ],
+
+
+    zeroFirstHalf:
+    [
+        {
+            type:
+                "Concept",
+
+            text:
+                "You only need to modify the first half of the existing elements. The second half should remain unchanged."
+        },
+
+        {
+            type:
+                "Approach",
+
+            text:
+                "Because the problem guarantees an even number of elements, numOfElements / 2 tells you exactly how many positions belong to the first half."
+        },
+
+        {
+            type:
+                "Code Structure",
+
+            text:
+                "Use a loop beginning at index 0 and continue only through the first half of the array. During each iteration, assign 0 to the current array element."
+        }
+    ],
+
+
+    replaceLast:
+    [
+        {
+            type:
+                "Concept",
+
+            text:
+                "You do not need a loop because only one existing array element is changing."
+        },
+
+        {
+            type:
+                "Approach",
+
+            text:
+                "Remember that array indexing begins at 0, so the last occupied position is one less than the number of elements."
+        },
+
+        {
+            type:
+                "Code Structure",
+
+            text:
+                "Use numOfElements to determine the index of the last element, then assign the parameter value directly to that position."
+        }
+    ],
+
+
+    search:
+    [
+        {
+            type:
+                "Concept",
+
+            text:
+                "A search checks elements until the target value is found or there are no more elements left to examine."
+        },
+
+        {
+            type:
+                "Approach",
+
+            text:
+                "Use a Boolean variable to remember whether the value has been found. Since the problem asks you to terminate once it is found, your loop should not continue checking unnecessary elements."
+        },
+
+        {
+            type:
+                "Code Structure",
+
+            text:
+                "Initialize a Boolean variable to false. Traverse the array while there are still elements to check and the value has not been found. When a match occurs, change the Boolean variable. Return that Boolean result after the loop."
+        }
+    ],
+
+
+    insertSecond:
+    [
+        {
+            type:
+                "Concept",
+
+            text:
+                "Inserting into the middle of an array requires making an empty position first. Existing values must be shifted without being overwritten."
+        },
+
+        {
+            type:
+                "Approach",
+
+            text:
+                "The new value belongs at index 1. Shift the existing elements to the right before placing the new value there. Think carefully about which direction the shifting loop should travel."
+        },
+
+        {
+            type:
+                "Code Structure",
+
+            text:
+                "When shifting values right, begin near the end of the occupied array and move backward toward index 1. Copy each value into the position to its right. Then place the new value at index 1 and update numOfElements."
+        }
+    ],
+
+
+    copyTo:
+    [
+        {
+            type:
+                "Concept",
+
+            text:
+                "The calling object is the source and the parameter object is the destination. Every existing value in the calling object must be copied."
+        },
+
+        {
+            type:
+                "Approach",
+
+            text:
+                "Traverse the calling object's occupied elements and place each value into the corresponding position of the parameter object's array."
+        },
+
+        {
+            type:
+                "Code Structure",
+
+            text:
+                "Use a loop over the calling object's numOfElements. Copy a[i] into the matching position of the parameter object. After copying, make sure the parameter object's numOfElements represents the number of elements it now contains."
+        }
+    ],
+
+
+    copyOddFrom:
+    [
+        {
+            type:
+                "Concept",
+
+            text:
+                "Not every value from the parameter object should be copied. You need to test each value and copy only the odd ones."
+        },
+
+        {
+            type:
+                "Approach",
+
+            text:
+                "Traverse the parameter object's elements. Use the remainder operator to determine whether each value is odd. Keep track of where the next accepted value belongs in the calling object."
+        },
+
+        {
+            type:
+                "Code Structure",
+
+            text:
+                "Loop through the parameter object's occupied elements. When a value is odd, place it at the next available position in the calling object's array and update the calling object's element count."
+        }
+    ],
+
+
+    exchangeFirst:
+    [
+        {
+            type:
+                "Concept",
+
+            text:
+                "You are exchanging one value between two different DArray objects: the calling object and the parameter object."
+        },
+
+        {
+            type:
+                "Approach",
+
+            text:
+                "Both first elements are located at index 0. Preserve one object's first value temporarily before replacing it."
+        },
+
+        {
+            type:
+                "Code Structure",
+
+            text:
+                "Use one temporary integer to save the calling object's first value. Replace it with the parameter object's first value, then place the saved value into the parameter object's first position."
+        }
+    ]
+};
 
 /* ========================================= */
 /* STATE                                     */
@@ -482,6 +738,10 @@ const attemptedProblems = {};
 
 const completedProblems = {};
 
+const savedHintLevels = {};
+
+const openedHints = {};
+
 
 
 /* ========================================= */
@@ -491,6 +751,47 @@ const completedProblems = {};
 const title =
     document.getElementById(
         "problem-title"
+    );
+
+const showHintButton =
+    document.getElementById(
+        "show-hint"
+    );
+
+
+const hintCard =
+    document.getElementById(
+        "hint-card"
+    );
+
+
+const hintLevel =
+    document.getElementById(
+        "hint-level"
+    );
+
+
+const hintType =
+    document.getElementById(
+        "hint-type"
+    );
+
+
+const hintText =
+    document.getElementById(
+        "hint-text"
+    );
+
+
+const nextHintButton =
+    document.getElementById(
+        "next-hint"
+    );
+
+
+const hideHintButton =
+    document.getElementById(
+        "hide-hint"
     );
 
 
@@ -1147,6 +1448,249 @@ function restoreResultState(
     }
 }
 
+/* ========================================= */
+/* HINT SYSTEM                               */
+/* ========================================= */
+
+function renderHint()
+{
+    const problem =
+        problems[currentProblem];
+
+
+    const hints =
+        problemHints[
+            problem.id
+        ];
+
+
+    let currentHint =
+        savedHintLevels[
+            currentProblem
+        ];
+
+
+    if (
+        currentHint === undefined
+    )
+    {
+        currentHint =
+            0;
+
+
+        savedHintLevels[
+            currentProblem
+        ] =
+            0;
+    }
+
+
+    const hint =
+        hints[currentHint];
+
+
+    hintLevel.textContent =
+        `Hint ${currentHint + 1} of ${hints.length}`;
+
+
+    hintType.textContent =
+        hint.type;
+
+
+    hintText.textContent =
+        hint.text;
+
+
+    if (
+        currentHint ===
+        hints.length - 1
+    )
+    {
+        nextHintButton.textContent =
+            "No More Hints";
+
+
+        nextHintButton.disabled =
+            true;
+    }
+
+    else
+    {
+        nextHintButton.textContent =
+            "Next Hint →";
+
+
+        nextHintButton.disabled =
+            false;
+    }
+}
+
+
+
+function restoreHintState()
+{
+    if (
+        openedHints[
+            currentProblem
+        ]
+    )
+    {
+        hintCard.hidden =
+            false;
+
+
+        showHintButton.hidden =
+            true;
+
+
+        renderHint();
+    }
+
+    else
+    {
+        hintCard.hidden =
+            true;
+
+
+        showHintButton.hidden =
+            false;
+    }
+}
+
+
+
+/* ========================================= */
+/* SHOW HINT                                 */
+/* ========================================= */
+
+showHintButton.addEventListener(
+    "click",
+
+    () =>
+    {
+        openedHints[
+            currentProblem
+        ] =
+            true;
+
+
+        if (
+            savedHintLevels[
+                currentProblem
+            ] === undefined
+        )
+        {
+            savedHintLevels[
+                currentProblem
+            ] =
+                0;
+        }
+
+
+        hintCard.hidden =
+            false;
+
+
+        showHintButton.hidden =
+            true;
+
+
+        renderHint();
+
+
+        hintCard.classList.remove(
+            "hint-enter"
+        );
+
+
+        void hintCard.offsetWidth;
+
+
+        hintCard.classList.add(
+            "hint-enter"
+        );
+    }
+);
+
+
+
+/* ========================================= */
+/* NEXT HINT                                 */
+/* ========================================= */
+
+nextHintButton.addEventListener(
+    "click",
+
+    () =>
+    {
+        const hints =
+            problemHints[
+                problems[
+                    currentProblem
+                ].id
+            ];
+
+
+        const currentHint =
+            savedHintLevels[
+                currentProblem
+            ];
+
+
+        if (
+            currentHint <
+            hints.length - 1
+        )
+        {
+            savedHintLevels[
+                currentProblem
+            ] =
+                currentHint + 1;
+
+
+            renderHint();
+
+
+            hintText.classList.remove(
+                "hint-text-change"
+            );
+
+
+            void hintText.offsetWidth;
+
+
+            hintText.classList.add(
+                "hint-text-change"
+            );
+        }
+    }
+);
+
+
+
+/* ========================================= */
+/* HIDE HINT                                 */
+/* ========================================= */
+
+hideHintButton.addEventListener(
+    "click",
+
+    () =>
+    {
+        openedHints[
+            currentProblem
+        ] =
+            false;
+
+
+        hintCard.hidden =
+            true;
+
+
+        showHintButton.hidden =
+            false;
+    }
+);
 
 
 /* ========================================= */
@@ -1223,6 +1767,7 @@ function loadProblem()
     problemNumber.textContent =
         `Problem ${currentProblem + 1} of ${problems.length}`;
 
+    restoreHintState();
 
     renderProblemProgress();
 

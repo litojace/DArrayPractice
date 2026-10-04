@@ -3742,3 +3742,535 @@ body.resizing-panels
             none;
     }
 }
+
+/* ========================================= */
+/* HINT SYSTEM                               */
+/* ========================================= */
+
+.hint-section
+{
+    margin-top:
+        16px;
+
+    margin-bottom:
+        18px;
+}
+
+
+
+/* ========================================= */
+/* HINT HEADER                               */
+/* ========================================= */
+
+.hint-header
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+}
+
+
+.hint-heading
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    color:
+        #273654;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+}
+
+
+.hint-bulb
+{
+    font-size:
+        14px;
+}
+
+
+
+/* ========================================= */
+/* SHOW HINT BUTTON                          */
+/* ========================================= */
+
+.show-hint-button
+{
+    padding:
+        6px
+        10px;
+
+    border:
+        1px solid
+        #d8dfeb;
+
+    border-radius:
+        6px;
+
+    background:
+        white;
+
+    color:
+        #5369bd;
+
+    font-family:
+        inherit;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    transition:
+        background 0.16s ease,
+        border-color 0.16s ease,
+        transform 0.16s ease,
+        box-shadow 0.16s ease;
+}
+
+
+.show-hint-button:hover
+{
+    border-color:
+        #bfcaf0;
+
+    background:
+        #f5f7ff;
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 3px 8px
+        rgba(50, 70, 140, 0.08);
+}
+
+
+.show-hint-button:active
+{
+    transform:
+        translateY(0)
+        scale(0.98);
+}
+
+
+
+/* ========================================= */
+/* HINT CARD                                 */
+/* ========================================= */
+
+.hint-card
+{
+    margin-top:
+        10px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid
+        #d8e0f1;
+
+    border-radius:
+        9px;
+
+    background:
+        #fbfcff;
+
+    box-shadow:
+        0 4px 12px
+        rgba(20, 36, 70, 0.05);
+}
+
+
+.hint-card[hidden]
+{
+    display:
+        none;
+}
+
+
+.hint-card.hint-enter
+{
+    animation:
+        hintCardEnter
+        0.25s
+        ease
+        both;
+}
+
+
+@keyframes hintCardEnter
+{
+    from
+    {
+        opacity:
+            0;
+
+        transform:
+            translateY(-4px);
+    }
+
+    to
+    {
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+
+/* ========================================= */
+/* HINT CARD TOP                             */
+/* ========================================= */
+
+.hint-card-top
+{
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    padding:
+        11px
+        12px;
+
+    border-bottom:
+        1px solid
+        #e4e9f2;
+
+    background:
+        #f4f6fd;
+}
+
+
+.hint-level
+{
+    color:
+        #66738a;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.05em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.hint-type
+{
+    margin-top:
+        2px;
+
+    color:
+        #314a9a;
+
+    font-size:
+        14px;
+
+    font-weight:
+        850;
+}
+
+
+
+/* ========================================= */
+/* HIDE HINT BUTTON                          */
+/* ========================================= */
+
+.hide-hint-button
+{
+    width:
+        25px;
+
+    height:
+        25px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        0;
+
+    border:
+        0;
+
+    border-radius:
+        5px;
+
+    background:
+        transparent;
+
+    color:
+        #8792a5;
+
+    font-family:
+        inherit;
+
+    font-size:
+        18px;
+
+    line-height:
+        1;
+
+    cursor:
+        pointer;
+
+    transition:
+        color 0.15s ease,
+        background 0.15s ease;
+}
+
+
+.hide-hint-button:hover
+{
+    background:
+        #e7ebf5;
+
+    color:
+        #34415a;
+}
+
+
+
+/* ========================================= */
+/* HINT TEXT                                 */
+/* ========================================= */
+
+.hint-text
+{
+    padding:
+        13px
+        12px;
+
+    color:
+        #45546c;
+
+    font-size:
+        14px;
+
+    line-height:
+        1.7;
+}
+
+
+.hint-text.hint-text-change
+{
+    animation:
+        hintTextChange
+        0.25s
+        ease
+        both;
+}
+
+
+@keyframes hintTextChange
+{
+    from
+    {
+        opacity:
+            0;
+
+        transform:
+            translateX(4px);
+    }
+
+    to
+    {
+        opacity:
+            1;
+
+        transform:
+            translateX(0);
+    }
+}
+
+
+
+/* ========================================= */
+/* HINT FOOTER                               */
+/* ========================================= */
+
+.hint-footer
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    padding:
+        9px
+        12px;
+
+    border-top:
+        1px solid
+        #e4e9f2;
+
+    background:
+        white;
+}
+
+
+.hint-reminder
+{
+    color:
+        #7f8897;
+
+    font-size:
+        12px;
+
+    line-height:
+        1.4;
+}
+
+
+
+/* ========================================= */
+/* NEXT HINT BUTTON                          */
+/* ========================================= */
+
+.next-hint-button
+{
+    flex:
+        0
+        0
+        auto;
+
+    padding:
+        6px
+        9px;
+
+    border:
+        0;
+
+    border-radius:
+        6px;
+
+    background:
+        #edf1ff;
+
+    color:
+        #4660c1;
+
+    font-family:
+        inherit;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.next-hint-button:hover:not(:disabled)
+{
+    background:
+        #e1e7ff;
+
+    transform:
+        translateX(1px);
+}
+
+
+.next-hint-button:active:not(:disabled)
+{
+    transform:
+        translateX(0)
+        scale(0.98);
+}
+
+
+.next-hint-button:disabled
+{
+    background:
+        #f0f2f5;
+
+    color:
+        #a5adba;
+
+    cursor:
+        default;
+}
+
+
+
+/* ========================================= */
+/* REDUCED MOTION                            */
+/* ========================================= */
+
+@media (prefers-reduced-motion: reduce)
+{
+    .hint-card.hint-enter,
+    .hint-text.hint-text-change
+    {
+        animation:
+            none;
+    }
+
+
+    .show-hint-button,
+    .next-hint-button
+    {
+        transition:
+            none;
+    }
+}
