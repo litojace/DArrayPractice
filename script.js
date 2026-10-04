@@ -466,15 +466,23 @@ const problems =
 
 
 
+/* ========================================= */
+/* STATE                                     */
+/* ========================================= */
+
 let currentProblem = 0;
 
 const savedCode = {};
 
+const savedResults = {};
+
+const completedProblems = {};
 
 
-/* ===================================== */
-/* PAGE ELEMENTS                         */
-/* ===================================== */
+
+/* ========================================= */
+/* PAGE ELEMENTS                             */
+/* ========================================= */
 
 const title =
     document.getElementById(
@@ -497,6 +505,12 @@ const parameters =
 const returnType =
     document.getElementById(
         "return-type"
+    );
+
+
+const assumptions =
+    document.getElementById(
+        "assumptions"
     );
 
 
@@ -536,38 +550,70 @@ const problemNumber =
     );
 
 
-
-/* ===================================== */
-/* ASSUMPTIONS                           */
-/* ===================================== */
-
-const assumptionsParagraph =
-    document.createElement("p");
-
-
-assumptionsParagraph.innerHTML =
-    `<strong>Assumptions:</strong>
-     <span id="assumptions"></span>`;
-
-
-returnType
-    .parentElement
-    .insertAdjacentElement(
-        "afterend",
-        assumptionsParagraph
-    );
-
-
-const assumptions =
+const problemProgress =
     document.getElementById(
-        "assumptions"
+        "problem-progress"
+    );
+
+
+const progressCount =
+    document.getElementById(
+        "progress-count"
+    );
+
+
+const passedCount =
+    document.getElementById(
+        "passed-count"
+    );
+
+
+const totalCount =
+    document.getElementById(
+        "total-count"
+    );
+
+
+const testProgressBar =
+    document.getElementById(
+        "test-progress-bar"
+    );
+
+
+const testIndicators =
+    document.getElementById(
+        "test-indicators"
+    );
+
+
+const codingPanel =
+    document.getElementById(
+        "coding-panel"
+    );
+
+
+const editorSection =
+    document.getElementById(
+        "editor-section"
+    );
+
+
+const resultsPanel =
+    document.getElementById(
+        "results-panel"
+    );
+
+
+const panelResizer =
+    document.getElementById(
+        "panel-resizer"
     );
 
 
 
-/* ===================================== */
-/* CODEMIRROR EDITOR                     */
-/* ===================================== */
+/* ========================================= */
+/* CODEMIRROR                                */
+/* ========================================= */
 
 const codeTextArea =
     document.getElementById(
@@ -649,6 +695,20 @@ const editor =
                         cm.indentSelection(
                             "subtract"
                         );
+                    },
+
+
+                "Ctrl-Enter":
+                    function()
+                    {
+                        runTests();
+                    },
+
+
+                "Cmd-Enter":
+                    function()
+                    {
+                        runTests();
                     }
             }
         }
@@ -656,9 +716,323 @@ const editor =
 
 
 
-/* ===================================== */
-/* LOAD PROBLEM                          */
-/* ===================================== */
+/* ========================================= */
+/* SAVE CURRENT CODE                         */
+/* ========================================= */
+
+function saveCurrentCode()
+{
+    savedCode[currentProblem] =
+        editor.getValue();
+}
+
+
+
+/* ========================================= */
+/* PROBLEM PROGRESS                          */
+/* ========================================= */
+
+function renderProblemProgress()
+{
+    problemProgress.innerHTML =
+        "";
+
+
+    let completedCount =
+        0;
+
+
+    for (
+        let i = 0;
+        i < problems.length;
+        ++i
+    )
+    {
+        const button =
+            document.createElement(
+                "button"
+            );
+
+
+        button.type =
+            "button";
+
+
+        button.className =
+            "problem-step";
+
+
+        if (
+            i === currentProblem
+        )
+        {
+            button.classList.add(
+                "current"
+            );
+        }
+
+
+        if (
+            completedProblems[i]
+        )
+        {
+            button.classList.add(
+                "completed"
+            );
+
+            button.textContent =
+                "✓";
+
+            ++completedCount;
+        }
+
+        else
+        {
+            button.textContent =
+                i + 1;
+        }
+
+
+        button.title =
+            `Problem ${i + 1}`;
+
+
+        button.addEventListener(
+            "click",
+
+            () =>
+            {
+                if (
+                    i === currentProblem
+                )
+                {
+                    return;
+                }
+
+
+                saveCurrentCode();
+
+
+                currentProblem =
+                    i;
+
+
+                loadProblem();
+            }
+        );
+
+
+        problemProgress.appendChild(
+            button
+        );
+    }
+
+
+    progressCount.textContent =
+        `${completedCount} / ${problems.length}`;
+}
+
+
+
+/* ========================================= */
+/* TEST INDICATORS                           */
+/* ========================================= */
+
+function createTestIndicators(
+    numberOfTests
+)
+{
+    testIndicators.innerHTML =
+        "";
+
+
+    for (
+        let i = 0;
+        i < numberOfTests;
+        ++i
+    )
+    {
+        const dot =
+            document.createElement(
+                "div"
+            );
+
+
+        dot.className =
+            "test-dot";
+
+
+        dot.textContent =
+            i + 1;
+
+
+        testIndicators.appendChild(
+            dot
+        );
+    }
+}
+
+
+
+/* ========================================= */
+/* EMPTY RESULTS                             */
+/* ========================================= */
+
+function resetResultsDisplay()
+{
+    const problem =
+        problems[currentProblem];
+
+
+    passedCount.textContent =
+        "0";
+
+
+    totalCount.textContent =
+        problem.tests.length;
+
+
+    testProgressBar.style.width =
+        "0%";
+
+
+    createTestIndicators(
+        problem.tests.length
+    );
+
+
+    results.classList.remove(
+        "running-results"
+    );
+
+
+    results.innerHTML =
+        `
+            <div class="empty-results">
+
+                <div class="empty-results-icon">
+                    &lt;/&gt;
+                </div>
+
+                <strong>
+                    No tests have been run yet.
+                </strong>
+
+                <p>
+                    Write your solution and run the tests.
+                </p>
+
+            </div>
+        `;
+}
+
+
+
+/* ========================================= */
+/* SAVE RESULT DISPLAY                       */
+/* ========================================= */
+
+function saveResultState()
+{
+    const dots =
+        Array.from(
+            testIndicators.children
+        );
+
+
+    savedResults[currentProblem] =
+    {
+        html:
+            results.innerHTML,
+
+        passed:
+            passedCount.textContent,
+
+        total:
+            totalCount.textContent,
+
+        progress:
+            testProgressBar.style.width,
+
+        indicators:
+            dots.map(
+                dot =>
+                ({
+                    className:
+                        dot.className,
+
+                    text:
+                        dot.textContent
+                })
+            )
+    };
+}
+
+
+
+/* ========================================= */
+/* RESTORE RESULT DISPLAY                    */
+/* ========================================= */
+
+function restoreResultState(
+    state
+)
+{
+    results.classList.remove(
+        "running-results"
+    );
+
+
+    results.innerHTML =
+        state.html;
+
+
+    passedCount.textContent =
+        state.passed;
+
+
+    totalCount.textContent =
+        state.total;
+
+
+    testProgressBar.style.width =
+        state.progress;
+
+
+    testIndicators.innerHTML =
+        "";
+
+
+    for (
+        const indicator
+        of state.indicators
+    )
+    {
+        const dot =
+            document.createElement(
+                "div"
+            );
+
+
+        dot.className =
+            indicator.className;
+
+
+        dot.textContent =
+            indicator.text;
+
+
+        testIndicators.appendChild(
+            dot
+        );
+    }
+}
+
+
+
+/* ========================================= */
+/* LOAD PROBLEM                              */
+/* ========================================= */
 
 function loadProblem()
 {
@@ -686,7 +1060,6 @@ function loadProblem()
         problem.assumptions;
 
 
-
     if (
         savedCode[currentProblem] !==
         undefined
@@ -703,13 +1076,8 @@ function loadProblem()
     }
 
 
-
     problemNumber.textContent =
         `Problem ${currentProblem + 1} of ${problems.length}`;
-
-
-    results.innerHTML =
-        "No tests have been run yet.";
 
 
     previousButton.disabled =
@@ -721,28 +1089,36 @@ function loadProblem()
         problems.length - 1;
 
 
+    renderProblemProgress();
+
+
+    if (
+        savedResults[currentProblem] !==
+        undefined
+    )
+    {
+        restoreResultState(
+            savedResults[currentProblem]
+        );
+    }
+
+    else
+    {
+        resetResultsDisplay();
+    }
+
+
     editor.refresh();
+
 
     editor.focus();
 }
 
 
 
-/* ===================================== */
-/* SAVE CURRENT CODE                     */
-/* ===================================== */
-
-function saveCurrentCode()
-{
-    savedCode[currentProblem] =
-        editor.getValue();
-}
-
-
-
-/* ===================================== */
-/* PREVIOUS                              */
-/* ===================================== */
+/* ========================================= */
+/* PREVIOUS                                  */
+/* ========================================= */
 
 previousButton.addEventListener(
     "click",
@@ -752,7 +1128,9 @@ previousButton.addEventListener(
         saveCurrentCode();
 
 
-        if (currentProblem > 0)
+        if (
+            currentProblem > 0
+        )
         {
             --currentProblem;
 
@@ -763,9 +1141,9 @@ previousButton.addEventListener(
 
 
 
-/* ===================================== */
-/* NEXT                                  */
-/* ===================================== */
+/* ========================================= */
+/* NEXT                                      */
+/* ========================================= */
 
 nextButton.addEventListener(
     "click",
@@ -789,9 +1167,9 @@ nextButton.addEventListener(
 
 
 
-/* ===================================== */
-/* RESET                                 */
-/* ===================================== */
+/* ========================================= */
+/* RESET                                     */
+/* ========================================= */
 
 resetButton.addEventListener(
     "click",
@@ -805,8 +1183,20 @@ resetButton.addEventListener(
             "";
 
 
-        results.innerHTML =
-            "No tests have been run yet.";
+        delete savedResults[
+            currentProblem
+        ];
+
+
+        delete completedProblems[
+            currentProblem
+        ];
+
+
+        resetResultsDisplay();
+
+
+        renderProblemProgress();
 
 
         editor.focus();
@@ -815,123 +1205,324 @@ resetButton.addEventListener(
 
 
 
-/* ===================================== */
-/* RUN TESTS                             */
-/* ===================================== */
+/* ========================================= */
+/* RUN BUTTON                                */
+/* ========================================= */
 
 runButton.addEventListener(
     "click",
+    runTests
+);
 
-    async () =>
+
+
+/* ========================================= */
+/* RUN TESTS                                 */
+/* ========================================= */
+
+async function runTests()
+{
+    if (
+        runButton.disabled
+    )
     {
-        const problem =
-            problems[currentProblem];
+        return;
+    }
 
 
-        saveCurrentCode();
+    const problem =
+        problems[currentProblem];
 
 
-        results.innerHTML =
-            "Running tests...";
+    const testedProblem =
+        currentProblem;
 
 
-        try
-        {
-            const response =
-                await fetch(
-                    "/run",
+    saveCurrentCode();
 
+
+    runButton.disabled =
+        true;
+
+
+    runButton.classList.add(
+        "running"
+    );
+
+
+    runButton.querySelector(
+        ".run-text"
+    ).textContent =
+        "Running...";
+
+
+    passedCount.textContent =
+        "0";
+
+
+    totalCount.textContent =
+        problem.tests.length;
+
+
+    testProgressBar.style.width =
+        "0%";
+
+
+    createTestIndicators(
+        problem.tests.length
+    );
+
+
+    results.classList.add(
+        "running-results"
+    );
+
+
+    results.innerHTML =
+        `
+            <div class="empty-results">
+
+                <div class="empty-results-icon">
+                    &lt;/&gt;
+                </div>
+
+                <strong>
+                    Running tests...
+                </strong>
+
+                <p>
+                    Compiling and checking your solution.
+                </p>
+
+            </div>
+        `;
+
+
+    try
+    {
+        const response =
+            await fetch(
+                "/run",
+
+                {
+                    method:
+                        "POST",
+
+                    headers:
                     {
-                        method:
-                            "POST",
+                        "Content-Type":
+                            "application/json"
+                    },
 
-                        headers:
-                        {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify(
+                    body:
+                        JSON.stringify(
                             {
                                 problem:
                                     problem.id,
 
                                 code:
                                     editor.getValue()
-                            })
-                    }
-                );
+                            }
+                        )
+                }
+            );
 
 
-            const data =
-                await response.json();
+        const data =
+            await response.json();
 
 
-            if (!data.success)
-            {
-                results.innerHTML =
-                    `<div class="compile-error">
-
-                        <b>
-                            Compilation failed.
-                        </b>
-
-                        <pre>${escapeHTML(data.error)}</pre>
-
-                    </div>`;
+        if (
+            testedProblem !==
+            currentProblem
+        )
+        {
+            return;
+        }
 
 
-                return;
-            }
+        if (
+            !data.success
+        )
+        {
+            showCompileError(
+                data.error
+            );
+
+            return;
+        }
 
 
-            gradeOutput(
-                data.output,
-                problem
+        gradeOutput(
+            data.output,
+            problem
+        );
+    }
+
+    catch (error)
+    {
+        if (
+            testedProblem ===
+            currentProblem
+        )
+        {
+            showServerError(
+                error
             );
         }
-
-        catch (error)
-        {
-            results.innerHTML =
-                `<div class="compile-error">
-
-                    <b>
-                        Server error.
-                    </b>
-
-                    <pre>${escapeHTML(error.toString())}</pre>
-
-                </div>`;
-        }
     }
-);
+
+    finally
+    {
+        runButton.disabled =
+            false;
+
+
+        runButton.classList.remove(
+            "running"
+        );
+
+
+        runButton.querySelector(
+            ".run-text"
+        ).textContent =
+            "Run Tests";
+    }
+}
 
 
 
-/* ===================================== */
-/* GRADE OUTPUT                          */
-/* ===================================== */
+/* ========================================= */
+/* COMPILE ERROR                             */
+/* ========================================= */
+
+function showCompileError(
+    error
+)
+{
+    results.classList.remove(
+        "running-results"
+    );
+
+
+    passedCount.textContent =
+        "0";
+
+
+    testProgressBar.style.width =
+        "0%";
+
+
+    delete completedProblems[
+        currentProblem
+    ];
+
+
+    results.innerHTML =
+        `
+            <div class="compile-error">
+
+                <b>
+                    Compilation failed.
+                </b>
+
+                <pre>${escapeHTML(error)}</pre>
+
+            </div>
+        `;
+
+
+    saveResultState();
+
+
+    renderProblemProgress();
+}
+
+
+
+/* ========================================= */
+/* SERVER ERROR                              */
+/* ========================================= */
+
+function showServerError(
+    error
+)
+{
+    results.classList.remove(
+        "running-results"
+    );
+
+
+    passedCount.textContent =
+        "0";
+
+
+    testProgressBar.style.width =
+        "0%";
+
+
+    delete completedProblems[
+        currentProblem
+    ];
+
+
+    results.innerHTML =
+        `
+            <div class="compile-error">
+
+                <b>
+                    Server error.
+                </b>
+
+                <pre>${escapeHTML(error.toString())}</pre>
+
+            </div>
+        `;
+
+
+    saveResultState();
+
+
+    renderProblemProgress();
+}
+
+
+
+/* ========================================= */
+/* GRADE OUTPUT                              */
+/* ========================================= */
 
 function gradeOutput(
     output,
     problem
 )
 {
+    results.classList.remove(
+        "running-results"
+    );
+
+
     const lines =
         output
             .split(/\r?\n/)
             .filter(
                 line =>
-                    line.startsWith("TEST")
+                    line.startsWith(
+                        "TEST"
+                    )
             );
 
 
-    let html = "";
+    let html =
+        "";
 
-    let passed = 0;
 
+    let passed =
+        0;
+
+
+    const dots =
+        testIndicators.children;
 
 
     for (
@@ -949,7 +1540,8 @@ function gradeOutput(
 
 
         const testPassed =
-            pieces[1] === "PASS";
+            pieces[1] ===
+            "PASS";
 
 
         const actual =
@@ -958,94 +1550,190 @@ function gradeOutput(
                 .join("|");
 
 
-        if (testPassed)
+        if (
+            testPassed
+        )
         {
             ++passed;
 
 
+            dots[i].classList.add(
+                "pass"
+            );
+
+
+            dots[i].textContent =
+                "✓";
+
+
             html +=
-                `<div class="test-pass">
+                `
+                    <div
+                        class="test-pass"
+                        style="animation-delay: ${i * 0.04}s"
+                    >
 
-                    ✓ <b>
-                        Test ${i + 1} passed
-                    </b>
+                        ✓ <b>
+                            Test ${i + 1} passed
+                        </b>
 
-                    <br>
+                        <div class="result-detail">
 
-                    Input:
-                    ${escapeHTML(
-                        problem.tests[i].input
-                    )}
+                            Input:
+                            ${escapeHTML(
+                                problem.tests[i].input
+                            )}
 
-                    <br>
+                            <br>
 
-                    Expected:
-                    ${escapeHTML(
-                        problem.tests[i].expected
-                    )}
+                            Expected:
+                            ${escapeHTML(
+                                problem.tests[i].expected
+                            )}
 
-                </div>`;
+                            <br>
+
+                            Actual:
+                            ${escapeHTML(
+                                actual === ""
+                                    ? problem.tests[i].expected
+                                    : actual
+                            )}
+
+                        </div>
+
+                    </div>
+                `;
         }
 
         else
         {
+            dots[i].classList.add(
+                "fail"
+            );
+
+
+            dots[i].textContent =
+                "✕";
+
+
             html +=
-                `<div class="test-fail">
+                `
+                    <div
+                        class="test-fail"
+                        style="animation-delay: ${i * 0.04}s"
+                    >
 
-                    ✕ <b>
-                        Test ${i + 1} failed
-                    </b>
+                        ✕ <b>
+                            Test ${i + 1} failed
+                        </b>
 
-                    <br>
+                        <div class="result-detail">
 
-                    Input:
-                    ${escapeHTML(
-                        problem.tests[i].input
-                    )}
+                            Input:
+                            ${escapeHTML(
+                                problem.tests[i].input
+                            )}
 
-                    <br>
+                            <br>
 
-                    Expected:
-                    ${escapeHTML(
-                        problem.tests[i].expected
-                    )}
+                            Expected:
+                            ${escapeHTML(
+                                problem.tests[i].expected
+                            )}
 
-                    <br>
+                            <br>
 
-                    Actual:
-                    ${escapeHTML(
-                        actual === ""
-                            ? "No valid result"
-                            : actual
-                    )}
+                            Actual:
+                            ${escapeHTML(
+                                actual === ""
+                                    ? "No valid result"
+                                    : actual
+                            )}
 
-                </div>`;
+                        </div>
+
+                    </div>
+                `;
         }
     }
 
 
+    const percentage =
+        (
+            passed /
+            problem.tests.length
+        ) * 100;
+
+
+    passedCount.textContent =
+        passed;
+
+
+    totalCount.textContent =
+        problem.tests.length;
+
+
+    testProgressBar.style.width =
+        `${percentage}%`;
+
 
     html +=
-        `<hr>
+        `
+            <div class="result-summary">
 
-        <b>
-            ${passed} /
-            ${problem.tests.length}
-            tests passed
-        </b>`;
+                <span>
+                    Tests completed
+                </span>
+
+                <strong>
+                    ${passed} /
+                    ${problem.tests.length}
+                    passed
+                </strong>
+
+            </div>
+        `;
 
 
     results.innerHTML =
         html;
+
+
+    if (
+        passed ===
+        problem.tests.length
+    )
+    {
+        completedProblems[
+            currentProblem
+        ] =
+            true;
+    }
+
+    else
+    {
+        delete completedProblems[
+            currentProblem
+        ];
+    }
+
+
+    saveResultState();
+
+
+    renderProblemProgress();
 }
 
 
 
-/* ===================================== */
-/* ESCAPE HTML                           */
-/* ===================================== */
+/* ========================================= */
+/* ESCAPE HTML                               */
+/* ========================================= */
 
-function escapeHTML(text)
+function escapeHTML(
+    text
+)
 {
     return String(text)
 
@@ -1067,8 +1755,279 @@ function escapeHTML(text)
 
 
 
-/* ===================================== */
-/* START                                 */
-/* ===================================== */
+/* ========================================= */
+/* PANEL RESIZER                             */
+/* ========================================= */
+
+let resizing =
+    false;
+
+
+panelResizer.addEventListener(
+    "pointerdown",
+
+    event =>
+    {
+        resizing =
+            true;
+
+
+        document.body.classList.add(
+            "resizing-panels"
+        );
+
+
+        panelResizer.classList.add(
+            "dragging"
+        );
+
+
+        panelResizer.setPointerCapture(
+            event.pointerId
+        );
+    }
+);
+
+
+panelResizer.addEventListener(
+    "pointermove",
+
+    event =>
+    {
+        if (
+            !resizing
+        )
+        {
+            return;
+        }
+
+
+        resizeEditorToPointer(
+            event.clientY
+        );
+    }
+);
+
+
+panelResizer.addEventListener(
+    "pointerup",
+
+    event =>
+    {
+        resizing =
+            false;
+
+
+        document.body.classList.remove(
+            "resizing-panels"
+        );
+
+
+        panelResizer.classList.remove(
+            "dragging"
+        );
+
+
+        if (
+            panelResizer.hasPointerCapture(
+                event.pointerId
+            )
+        )
+        {
+            panelResizer.releasePointerCapture(
+                event.pointerId
+            );
+        }
+    }
+);
+
+
+panelResizer.addEventListener(
+    "pointercancel",
+
+    () =>
+    {
+        resizing =
+            false;
+
+
+        document.body.classList.remove(
+            "resizing-panels"
+        );
+
+
+        panelResizer.classList.remove(
+            "dragging"
+        );
+    }
+);
+
+
+
+/* ========================================= */
+/* RESIZE EDITOR                             */
+/* ========================================= */
+
+function resizeEditorToPointer(
+    pointerY
+)
+{
+    const panelRect =
+        codingPanel.getBoundingClientRect();
+
+
+    const dividerHeight =
+        panelResizer.offsetHeight;
+
+
+    const minimumEditorHeight =
+        250;
+
+
+    const minimumResultsHeight =
+        190;
+
+
+    const maximumEditorHeight =
+        panelRect.height -
+        minimumResultsHeight -
+        dividerHeight;
+
+
+    let newEditorHeight =
+        pointerY -
+        panelRect.top;
+
+
+    newEditorHeight =
+        Math.max(
+            minimumEditorHeight,
+            Math.min(
+                newEditorHeight,
+                maximumEditorHeight
+            )
+        );
+
+
+    editorSection.style.height =
+        `${newEditorHeight}px`;
+
+
+    editorSection.style.flex =
+        "0 0 auto";
+
+
+    editor.refresh();
+}
+
+
+
+/* ========================================= */
+/* KEYBOARD RESIZER                          */
+/* ========================================= */
+
+panelResizer.addEventListener(
+    "keydown",
+
+    event =>
+    {
+        if (
+            event.key !==
+            "ArrowUp" &&
+            event.key !==
+            "ArrowDown"
+        )
+        {
+            return;
+        }
+
+
+        event.preventDefault();
+
+
+        const panelRect =
+            codingPanel.getBoundingClientRect();
+
+
+        const editorRect =
+            editorSection.getBoundingClientRect();
+
+
+        let newHeight =
+            editorRect.height;
+
+
+        if (
+            event.key ===
+            "ArrowUp"
+        )
+        {
+            newHeight -=
+                25;
+        }
+
+        else
+        {
+            newHeight +=
+                25;
+        }
+
+
+        const minimumEditorHeight =
+            250;
+
+
+        const minimumResultsHeight =
+            190;
+
+
+        const maximumEditorHeight =
+            panelRect.height -
+            minimumResultsHeight -
+            panelResizer.offsetHeight;
+
+
+        newHeight =
+            Math.max(
+                minimumEditorHeight,
+                Math.min(
+                    newHeight,
+                    maximumEditorHeight
+                )
+            );
+
+
+        editorSection.style.height =
+            `${newHeight}px`;
+
+
+        editorSection.style.flex =
+            "0 0 auto";
+
+
+        editor.refresh();
+    }
+);
+
+
+
+/* ========================================= */
+/* WINDOW RESIZE                             */
+/* ========================================= */
+
+window.addEventListener(
+    "resize",
+
+    () =>
+    {
+        editor.refresh();
+    }
+);
+
+
+
+/* ========================================= */
+/* START                                     */
+/* ========================================= */
 
 loadProblem();

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -8,7 +9,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>DArray Practice</title>
+    <title>C++2 DArray Practice</title>
 
     <link
         rel="stylesheet"
@@ -26,93 +27,222 @@
     >
 </head>
 
+
 <body>
 
-    <header>
-        <div class="header-content">
+    <!-- ===================================== -->
+    <!-- TOP BAR                               -->
+    <!-- ===================================== -->
 
-            <h1>
-                C++2 DArray Practice
-            </h1>
+    <header class="topbar">
 
-            <p>
-                Practice your DArray member functions with Jacen 💗
-            </p>
+        <div class="brand">
+
+            <div class="cpp-logo">
+                C++
+            </div>
+
+            <div>
+
+                <div class="brand-title">
+                    C++2 DArray Practice
+                </div>
+
+                <div class="brand-subtitle">
+                    Fall 2026 · By Jacen with 💗
+                </div>
+
+            </div>
 
         </div>
+
+
+        <div class="workspace-title">
+            Practice Workspace
+        </div>
+
+
+        <div class="topic-badge">
+            DArray
+        </div>
+
     </header>
 
 
-    <main>
+
+    <!-- ===================================== -->
+    <!-- WORKSPACE                             -->
+    <!-- ===================================== -->
+
+    <main class="workspace">
+
 
         <!-- ================================= -->
-        <!-- PROBLEM                           -->
+        <!-- LEFT SIDE                         -->
         <!-- ================================= -->
 
-        <section class="card">
+        <section class="problem-panel">
 
-            <div class="navigation">
 
-                <button id="previous">
+            <!-- NAVIGATION -->
+
+            <div class="problem-navigation">
+
+                <button
+                    id="previous"
+                    class="nav-button"
+                    type="button"
+                >
                     ← Previous
                 </button>
 
-                <strong id="problem-number">
-                    Problem 1 of 9
-                </strong>
 
-                <button id="next">
+                <div
+                    id="problem-number"
+                    class="problem-number"
+                >
+                    Problem 1 of 9
+                </div>
+
+
+                <button
+                    id="next"
+                    class="nav-button"
+                    type="button"
+                >
                     Next →
                 </button>
 
             </div>
 
 
-            <h2 id="problem-title"></h2>
 
+            <!-- PROGRESS -->
 
-            <p id="problem-description"></p>
+            <div class="progress-section">
 
+                <div class="progress-heading">
 
-            <p>
-                <strong>Parameters:</strong>
-                <span id="parameters"></span>
-            </p>
+                    <strong>
+                        Progress
+                    </strong>
 
-
-            <p>
-                <strong>Return type:</strong>
-                <span id="return-type"></span>
-            </p>
-
-        </section>
-
-
-
-        <!-- ================================= -->
-        <!-- DARRAY.H REFERENCE                -->
-        <!-- ================================= -->
-
-        <section class="card reference-card">
-
-            <details>
-
-                <summary>
-                    DArray.h Reference
-                </summary>
-
-
-                <div class="reference-description">
-
-                    <p>
-                        You may use this class definition as a reference
-                        while writing your member function.
-                    </p>
+                    <span id="progress-count">
+                        0 / 9
+                    </span>
 
                 </div>
 
 
-                <pre class="reference-code"><code>#ifndef DARRAY_H
+                <div
+                    id="problem-progress"
+                    class="problem-progress"
+                ></div>
+
+            </div>
+
+
+
+            <!-- SCROLLABLE PROBLEM AREA -->
+
+            <div class="problem-scroll">
+
+                <div class="problem-body">
+
+                    <div class="section-label">
+                        DARRAY PRACTICE
+                    </div>
+
+
+                    <h1 id="problem-title"></h1>
+
+
+                    <div
+                        id="problem-description"
+                        class="problem-description"
+                    ></div>
+
+
+
+                    <!-- DETAILS -->
+
+                    <div class="problem-details">
+
+                        <div class="detail-card">
+
+                            <div class="detail-label">
+                                PARAMETERS
+                            </div>
+
+                            <div
+                                id="parameters"
+                                class="detail-value"
+                            ></div>
+
+                        </div>
+
+
+                        <div class="detail-card">
+
+                            <div class="detail-label">
+                                RETURN TYPE
+                            </div>
+
+                            <div
+                                id="return-type"
+                                class="detail-value"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ASSUMPTIONS -->
+
+                    <div class="assumption-box">
+
+                        <div class="assumption-title">
+                            ASSUMPTIONS
+                        </div>
+
+                        <div id="assumptions"></div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CLASS REFERENCE -->
+
+                <div class="reference-section">
+
+                    <div class="reference-heading">
+
+                        <div>
+
+                            <strong>
+                                Class Reference
+                            </strong>
+
+                            <div class="reference-subtitle">
+                                Use this class definition while writing
+                                your member-function definition.
+                            </div>
+
+                        </div>
+
+
+                        <span class="reference-badge">
+                            Reference only
+                        </span>
+
+                    </div>
+
+
+                    <pre class="reference-code"><code>#ifndef DARRAY_H
 #define DARRAY_H
 
 const int CAP = 50;
@@ -139,49 +269,7 @@ private:
 
 #endif</code></pre>
 
-            </details>
-
-        </section>
-
-
-
-        <!-- ================================= -->
-        <!-- CODE EDITOR                       -->
-        <!-- ================================= -->
-
-        <section class="card">
-
-            <div class="editor-heading">
-
-                <h3>
-                    Your Code
-                </h3>
-
-                <span class="language-label">
-                    C++
-                </span>
-
-            </div>
-
-
-            <textarea
-                id="code"
-                spellcheck="false"
-            ></textarea>
-
-
-            <div class="button-row">
-
-                <button id="run">
-                    ▶ Run Tests
-                </button>
-
-                <button
-                    id="reset"
-                    class="secondary"
-                >
-                    Reset Code
-                </button>
+                </div>
 
             </div>
 
@@ -190,18 +278,176 @@ private:
 
 
         <!-- ================================= -->
-        <!-- TEST RESULTS                      -->
+        <!-- RIGHT SIDE                        -->
         <!-- ================================= -->
 
-        <section class="card">
+        <section
+            id="coding-panel"
+            class="coding-panel"
+        >
 
-            <h3>
-                Test Results
-            </h3>
 
-            <div id="results">
-                No tests have been run yet.
+            <!-- EDITOR -->
+
+            <section
+                id="editor-section"
+                class="editor-section"
+            >
+
+                <div class="editor-header">
+
+                    <div>
+
+                        <div class="editor-title">
+                            Your Solution
+                        </div>
+
+                        <div class="editor-subtitle">
+                            Write the complete member-function definition.
+                        </div>
+
+                    </div>
+
+
+                    <span class="language-badge">
+                        C++17
+                    </span>
+
+                </div>
+
+
+                <div class="code-window">
+
+                    <textarea
+                        id="code"
+                        spellcheck="false"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="editor-toolbar">
+
+                    <div class="toolbar-actions">
+
+                        <button
+                            id="run"
+                            class="run-button"
+                            type="button"
+                        >
+                            <span class="run-icon">
+                                ▶
+                            </span>
+
+                            <span class="run-text">
+                                Run Tests
+                            </span>
+                        </button>
+
+
+                        <button
+                            id="reset"
+                            class="reset-button"
+                            type="button"
+                        >
+                            Reset Code
+                        </button>
+
+
+                        <span class="keyboard-hint">
+                            Ctrl / Cmd + Enter to Run
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- DRAGGABLE DIVIDER -->
+
+            <div
+                id="panel-resizer"
+                class="panel-resizer"
+                role="separator"
+                tabindex="0"
+            >
+
+                <div class="resizer-handle"></div>
+
             </div>
+
+
+
+            <!-- RESULTS -->
+
+            <section
+                id="results-panel"
+                class="results-panel"
+            >
+
+                <div class="results-header">
+
+                    <div>
+
+                        <div class="results-title">
+                            Test Results
+                        </div>
+
+                        <div class="results-subtitle">
+                            Run your code to check your solution.
+                        </div>
+
+                    </div>
+
+
+                    <div class="score">
+
+                        <strong id="passed-count">
+                            0
+                        </strong>
+
+                        <span>
+                            /
+                        </span>
+
+                        <span id="total-count">
+                            3
+                        </span>
+
+                        <span>
+                            passed
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div
+                        id="test-progress-bar"
+                        class="test-progress-bar"
+                    ></div>
+
+                </div>
+
+
+                <div
+                    id="test-indicators"
+                    class="test-indicators"
+                ></div>
+
+
+                <div
+                    id="results"
+                    class="results"
+                ></div>
+
+            </section>
 
         </section>
 
@@ -237,4 +483,5 @@ private:
     <script src="script.js"></script>
 
 </body>
+
 </html>
