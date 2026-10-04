@@ -539,7 +539,7 @@ body.resizing-panels
 }
 
 
-.problem-step:hover
+.problem-step:hover:not(:disabled)
 {
     transform:
         translateY(-2px);
@@ -549,6 +549,13 @@ body.resizing-panels
 
     color:
         #3455c5;
+}
+
+
+.problem-step:disabled
+{
+    cursor:
+        wait;
 }
 
 
@@ -586,7 +593,7 @@ body.resizing-panels
 }
 
 
-.problem-step.completed:hover
+.problem-step.completed:hover:not(:disabled)
 {
     background:
         #5ba36c;
@@ -1385,7 +1392,7 @@ body.resizing-panels
 }
 
 
-.reset-button:hover
+.reset-button:hover:not(:disabled)
 {
     transform:
         translateY(-1px);
@@ -1395,6 +1402,19 @@ body.resizing-panels
 
     background:
         #f8faff;
+}
+
+
+.reset-button:disabled
+{
+    cursor:
+        wait;
+
+    opacity:
+        0.55;
+
+    background:
+        #f5f7fa;
 }
 
 
@@ -2263,4 +2283,486 @@ body.resizing-panels
         display:
             none;
     }
+}
+
+/* ========================================= */
+/* IMPROVED ERROR FEEDBACK                   */
+/* ========================================= */
+
+.error-card
+{
+    overflow:
+        hidden;
+
+    border-radius:
+        10px;
+
+    background:
+        white;
+
+    box-shadow:
+        0 4px 14px
+        rgba(15, 23, 42, 0.06);
+
+    animation:
+        errorCardEnter 0.28s ease
+        both;
+}
+
+
+@keyframes errorCardEnter
+{
+    from
+    {
+        opacity:
+            0;
+
+        transform:
+            translateY(6px);
+    }
+
+    to
+    {
+        opacity:
+            1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+
+/* ========================================= */
+/* ERROR HEADER                              */
+/* ========================================= */
+
+.error-card-heading
+{
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    padding:
+        14px
+        15px;
+
+    border-bottom:
+        1px solid
+        #f0d2d2;
+
+    background:
+        #fff7f7;
+}
+
+
+.error-icon
+{
+    width:
+        34px;
+
+    height:
+        34px;
+
+    flex:
+        0
+        0
+        34px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #fde2e2;
+
+    color:
+        #b73d3d;
+
+    font-size:
+        18px;
+
+    font-weight:
+        900;
+}
+
+
+.error-title
+{
+    color:
+        #9d3535;
+
+    font-size:
+        14px;
+
+    font-weight:
+        850;
+}
+
+
+.error-subtitle
+{
+    margin-top:
+        2px;
+
+    color:
+        #7d6060;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.5;
+}
+
+
+
+/* ========================================= */
+/* MAIN ERROR MESSAGE                        */
+/* ========================================= */
+
+.error-main-message
+{
+    padding:
+        14px
+        15px;
+
+    border-bottom:
+        1px solid
+        #edf0f4;
+}
+
+
+.error-label
+{
+    margin-bottom:
+        7px;
+
+    color:
+        #7a879a;
+
+    font-size:
+        10px;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        0.04em;
+
+    text-transform:
+        uppercase;
+}
+
+
+.error-message-row
+{
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    gap:
+        8px;
+
+    flex-wrap:
+        wrap;
+}
+
+
+.error-message-row code
+{
+    color:
+        #9d3535;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.6;
+
+    word-break:
+        break-word;
+}
+
+
+.error-line-badge
+{
+    flex:
+        0
+        0
+        auto;
+
+    padding:
+        3px
+        7px;
+
+    border:
+        1px solid
+        #f0caca;
+
+    border-radius:
+        5px;
+
+    background:
+        #fff1f1;
+
+    color:
+        #a43c3c;
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
+}
+
+
+
+/* ========================================= */
+/* ERROR TIP                                 */
+/* ========================================= */
+
+.error-tip
+{
+    margin:
+        12px
+        15px;
+
+    padding:
+        11px
+        12px;
+
+    border:
+        1px solid
+        #d9e2f1;
+
+    border-radius:
+        8px;
+
+    background:
+        #f5f8fd;
+
+    color:
+        #53627a;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.6;
+}
+
+
+.error-tip-title
+{
+    margin-bottom:
+        3px;
+
+    color:
+        #293d68;
+
+    font-size:
+        10px;
+
+    font-weight:
+        850;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.04em;
+}
+
+
+
+/* ========================================= */
+/* FULL COMPILER OUTPUT                      */
+/* ========================================= */
+
+.error-details
+{
+    margin:
+        0
+        15px
+        15px;
+
+    border:
+        1px solid
+        #dce3ed;
+
+    border-radius:
+        8px;
+
+    background:
+        #fafbfd;
+}
+
+
+.error-details summary
+{
+    padding:
+        10px
+        12px;
+
+    color:
+        #4f607b;
+
+    font-size:
+        11px;
+
+    font-weight:
+        750;
+
+    cursor:
+        pointer;
+
+    user-select:
+        none;
+}
+
+
+.error-details summary:hover
+{
+    color:
+        #3455c5;
+
+    background:
+        #f5f7fb;
+}
+
+
+.error-details[open] summary
+{
+    border-bottom:
+        1px solid
+        #dce3ed;
+}
+
+
+.error-details pre
+{
+    margin:
+        0;
+
+    padding:
+        12px;
+
+    overflow-x:
+        auto;
+
+    background:
+        #172033;
+
+    color:
+        #f8fafc;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+    font-size:
+        10px;
+
+    line-height:
+        1.6;
+
+    white-space:
+        pre-wrap;
+
+    word-break:
+        break-word;
+}
+
+
+
+/* ========================================= */
+/* TESTS NOT RUN                             */
+/* ========================================= */
+
+.test-dot.not-run
+{
+    background:
+        #eef1f5;
+
+    color:
+        #98a3b3;
+
+    border:
+        1px solid
+        #dce2ea;
+
+    animation:
+        none;
+}
+
+
+
+/* ========================================= */
+/* DISABLED CONTROLS DURING TESTING          */
+/* ========================================= */
+
+.reset-button:disabled,
+.problem-step:disabled
+{
+    cursor:
+        not-allowed;
+
+    opacity:
+        0.5;
+
+    transform:
+        none;
+}
+
+
+.problem-step:disabled:hover
+{
+    transform:
+        none;
+
+    border-color:
+        #d5deeb;
+
+    color:
+        #334155;
+}
+
+
+.problem-step.completed:disabled
+{
+    opacity:
+        0.65;
+
+    background:
+        #6bb27c;
+
+    border-color:
+        #6bb27c;
+
+    color:
+        white;
 }

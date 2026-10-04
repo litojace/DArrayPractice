@@ -472,6 +472,8 @@ const problems =
 
 let currentProblem = 0;
 
+let testsRunning = false;
+
 const savedCode = {};
 
 const savedResults = {};
@@ -717,6 +719,27 @@ const editor =
 
 
 /* ========================================= */
+/* WAIT                                      */
+/* ========================================= */
+
+function wait(
+    milliseconds
+)
+{
+    return new Promise(
+        resolve =>
+        {
+            setTimeout(
+                resolve,
+                milliseconds
+            );
+        }
+    );
+}
+
+
+
+/* ========================================= */
 /* SAVE CURRENT CODE                         */
 /* ========================================= */
 
@@ -724,6 +747,44 @@ function saveCurrentCode()
 {
     savedCode[currentProblem] =
         editor.getValue();
+}
+
+
+
+/* ========================================= */
+/* LOCK / UNLOCK CONTROLS                    */
+/* ========================================= */
+
+function updateControls()
+{
+    previousButton.disabled =
+        testsRunning ||
+        currentProblem === 0;
+
+
+    nextButton.disabled =
+        testsRunning ||
+        currentProblem ===
+            problems.length - 1;
+
+
+    resetButton.disabled =
+        testsRunning;
+
+
+    const problemButtons =
+        problemProgress.querySelectorAll(
+            ".problem-step"
+        );
+
+
+    problemButtons.forEach(
+        button =>
+        {
+            button.disabled =
+                testsRunning;
+        }
+    );
 }
 
 
@@ -797,12 +858,17 @@ function renderProblemProgress()
             `Problem ${i + 1}`;
 
 
+        button.disabled =
+            testsRunning;
+
+
         button.addEventListener(
             "click",
 
             () =>
             {
                 if (
+                    testsRunning ||
                     i === currentProblem
                 )
                 {
@@ -830,6 +896,9 @@ function renderProblemProgress()
 
     progressCount.textContent =
         `${completedCount} / ${problems.length}`;
+
+
+    updateControls();
 }
 
 
@@ -1080,15 +1149,6 @@ function loadProblem()
         `Problem ${currentProblem + 1} of ${problems.length}`;
 
 
-    previousButton.disabled =
-        currentProblem === 0;
-
-
-    nextButton.disabled =
-        currentProblem ===
-        problems.length - 1;
-
-
     renderProblemProgress();
 
 
@@ -1108,6 +1168,9 @@ function loadProblem()
     }
 
 
+    updateControls();
+
+
     editor.refresh();
 
 
@@ -1125,6 +1188,14 @@ previousButton.addEventListener(
 
     () =>
     {
+        if (
+            testsRunning
+        )
+        {
+            return;
+        }
+
+
         saveCurrentCode();
 
 
@@ -1150,6 +1221,14 @@ nextButton.addEventListener(
 
     () =>
     {
+        if (
+            testsRunning
+        )
+        {
+            return;
+        }
+
+
         saveCurrentCode();
 
 
@@ -1176,6 +1255,14 @@ resetButton.addEventListener(
 
     () =>
     {
+        if (
+            testsRunning
+        )
+        {
+            return;
+        }
+
+
         editor.setValue("");
 
 
@@ -1223,7 +1310,7 @@ runButton.addEventListener(
 async function runTests()
 {
     if (
-        runButton.disabled
+        testsRunning
     )
     {
         return;
@@ -1241,6 +1328,10 @@ async function runTests()
     saveCurrentCode();
 
 
+    testsRunning =
+        true;
+
+
     runButton.disabled =
         true;
 
@@ -1254,6 +1345,9 @@ async function runTests()
         ".run-text"
     ).textContent =
         "Running...";
+
+
+    updateControls();
 
 
     passedCount.textContent =
@@ -1271,6 +1365,9 @@ async function runTests()
     createTestIndicators(
         problem.tests.length
     );
+
+
+    updateControls();
 
 
     results.classList.add(
@@ -1353,7 +1450,7 @@ async function runTests()
         }
 
 
-        gradeOutput(
+        await gradeOutput(
             data.output,
             problem
         );
@@ -1374,6 +1471,10 @@ async function runTests()
 
     finally
     {
+        testsRunning =
+            false;
+
+
         runButton.disabled =
             false;
 
@@ -1387,6 +1488,268 @@ async function runTests()
             ".run-text"
         ).textContent =
             "Run Tests";
+
+
+        updateControls();
+    }
+}
+
+
+
+/* ========================================= */
+/* COMPILER ERROR INFORMATION                */
+/* ========================================= */
+
+function getCompilerErrorInfo(
+    error
+)
+{
+    const text =
+        String(error);
+
+
+    const lines =
+        text.split(/\r?\n/);
+
+
+    let mainMessage =
+        "The compiler found an error in your code.";
+
+
+    let lineNumber =
+        "";
+
+
+    /*
+        Look for the first real G++ error message.
+
+        A typical message looks like:
+
+        submission.cpp:5:10: error: expected ';' before '}'
+    */
+    for (
+        const line of lines
+    )
+    {
+        if (
+            line.includes(
+                "error:"
+            )
+        )
+        {
+            const errorIndex =
+                line.indexOf(
+                    "error:"
+                );
+
+
+            mainMessage =
+                line
+                    .substring(
+                        errorIndex + 6
+                    )
+                    .trim();
+
+
+            const locationMatch =
+                line.match(
+                    /:(\d+):\d+:\s*error:/
+                );
+
+
+                if (
+                        locationMatch !== null
+                    )
+                    {
+                        const compilerLine =
+                            Number(
+                                locationMatch[1]
+                            );
+
+
+                        /*
+                            server.js adds these two lines before
+                            the student's submitted code:
+
+                            #include "DArray.h"
+                            [blank line]
+
+                            Therefore, G++ line numbers are two
+                            lines ahead of the CodeMirror editor.
+                        */
+                        const editorLine =
+                            compilerLine - 2;
+
+
+                        if (
+                            editorLine > 0
+                        )
+                        {
+                            lineNumber =
+                                editorLine;
+                        }
+                    }
+
+
+            break;
+        }
+    }
+
+
+    let tip =
+        "Read the compiler message carefully and check the code near the reported location.";
+
+
+    const lowerMessage =
+        mainMessage.toLowerCase();
+
+
+    /*
+        Give a short learning hint for several common
+        beginner C++ compilation errors.
+    */
+    if (
+        lowerMessage.includes(
+            "expected ';'"
+        ) ||
+        lowerMessage.includes(
+            "expected ‘;’"
+        ) ||
+        lowerMessage.includes(
+            "expected ';' before"
+        )
+    )
+    {
+        tip =
+            "Check the statement immediately before this location. You may be missing a semicolon (;).";
+    }
+
+    else if (
+        lowerMessage.includes(
+            "was not declared"
+        ) ||
+        lowerMessage.includes(
+            "not declared in this scope"
+        )
+    )
+    {
+        tip =
+            "Check the spelling of the identifier and make sure it was declared before you use it.";
+    }
+
+    else if (
+        lowerMessage.includes(
+            "expected '}'"
+        ) ||
+        lowerMessage.includes(
+            "expected ‘}’"
+        )
+    )
+    {
+        tip =
+            "Check your curly braces. An opening { may be missing its matching closing }.";
+    }
+
+    else if (
+        lowerMessage.includes(
+            "expected ')'"
+        ) ||
+        lowerMessage.includes(
+            "expected ‘)’"
+        )
+    )
+    {
+        tip =
+            "Check your parentheses. An opening ( may be missing its matching closing ).";
+    }
+
+    else if (
+        lowerMessage.includes(
+            "no matching function"
+        )
+    )
+    {
+        tip =
+            "Check the function name, number of arguments, and argument types.";
+    }
+
+    else if (
+        lowerMessage.includes(
+            "cannot convert"
+        ) ||
+        lowerMessage.includes(
+            "invalid conversion"
+        )
+    )
+    {
+        tip =
+            "The compiler found incompatible types. Check the type of the value you are assigning or passing.";
+    }
+
+    else if (
+        lowerMessage.includes(
+            "expected primary-expression"
+        )
+    )
+    {
+        tip =
+            "Check the expression near this location for a missing value, operator, parenthesis, or other syntax problem.";
+    }
+
+    else if (
+        lowerMessage.includes(
+            "redefinition"
+        )
+    )
+    {
+        tip =
+            "Something with this name has already been defined. Check for a duplicate variable or function definition.";
+    }
+
+
+    return {
+        message:
+            mainMessage,
+
+        line:
+            lineNumber,
+
+        tip:
+            tip
+    };
+}
+
+
+
+/* ========================================= */
+/* MARK TESTS AS NOT RUN                     */
+/* ========================================= */
+
+function markTestsNotRun()
+{
+    const dots =
+        testIndicators.children;
+
+
+    for (
+        let i = 0;
+        i < dots.length;
+        ++i
+    )
+    {
+        dots[i].classList.remove(
+            "pass",
+            "fail"
+        );
+
+
+        dots[i].classList.add(
+            "not-run"
+        );
+
+
+        dots[i].textContent =
+            "—";
     }
 }
 
@@ -1413,20 +1776,111 @@ function showCompileError(
         "0%";
 
 
+    markTestsNotRun();
+
+
     delete completedProblems[
         currentProblem
     ];
 
 
+    const errorInfo =
+        getCompilerErrorInfo(
+            error
+        );
+
+
+    let locationHTML =
+        "";
+
+
+    if (
+        errorInfo.line !== ""
+    )
+    {
+        locationHTML =
+            `
+                <span class="error-line-badge">
+                    Line ${escapeHTML(
+                        errorInfo.line
+                    )}
+                </span>
+            `;
+    }
+
+
     results.innerHTML =
         `
-            <div class="compile-error">
+            <div class="error-card compile-error-card">
 
-                <b>
-                    Compilation failed.
-                </b>
+                <div class="error-card-heading">
 
-                <pre>${escapeHTML(error)}</pre>
+                    <div class="error-icon">
+                        !
+                    </div>
+
+                    <div>
+
+                        <div class="error-title">
+                            Compilation Error
+                        </div>
+
+                        <div class="error-subtitle">
+                            Your solution could not be compiled.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="error-main-message">
+
+                    <div class="error-label">
+                        Main compiler message
+                    </div>
+
+                    <div class="error-message-row">
+
+                        ${locationHTML}
+
+                        <code>
+                            ${escapeHTML(
+                                errorInfo.message
+                            )}
+                        </code>
+
+                    </div>
+
+                </div>
+
+
+                <div class="error-tip">
+
+                    <div class="error-tip-title">
+                        Tip
+                    </div>
+
+                    <div>
+                        ${escapeHTML(
+                            errorInfo.tip
+                        )}
+                    </div>
+
+                </div>
+
+
+                <details class="error-details">
+
+                    <summary>
+                        View full compiler output
+                    </summary>
+
+                    <pre>${escapeHTML(
+                        error
+                    )}</pre>
+
+                </details>
 
             </div>
         `;
@@ -1441,7 +1895,7 @@ function showCompileError(
 
 
 /* ========================================= */
-/* SERVER ERROR                              */
+/* SERVER / RUNTIME ERROR                    */
 /* ========================================= */
 
 function showServerError(
@@ -1461,20 +1915,111 @@ function showServerError(
         "0%";
 
 
+    markTestsNotRun();
+
+
     delete completedProblems[
         currentProblem
     ];
 
 
+    const errorText =
+        String(error);
+
+
+    let titleText =
+        "Runtime Error";
+
+
+    let descriptionText =
+        "Your code could not finish running successfully.";
+
+
+    let tipText =
+        "Check your array indexes, loops, and any operations that could access invalid memory.";
+
+
+    if (
+        errorText
+            .toLowerCase()
+            .includes(
+                "too long"
+            ) ||
+        errorText
+            .toLowerCase()
+            .includes(
+                "timeout"
+            )
+    )
+    {
+        titleText =
+            "Time Limit Exceeded";
+
+
+        descriptionText =
+            "Your code started running, but it did not finish in time.";
+
+
+        tipText =
+            "Check your loop condition and make sure the loop eventually stops. An infinite loop is a common cause.";
+    }
+
+
     results.innerHTML =
         `
-            <div class="compile-error">
+            <div class="error-card runtime-error-card">
 
-                <b>
-                    Server error.
-                </b>
+                <div class="error-card-heading">
 
-                <pre>${escapeHTML(error.toString())}</pre>
+                    <div class="error-icon">
+                        !
+                    </div>
+
+                    <div>
+
+                        <div class="error-title">
+                            ${escapeHTML(
+                                titleText
+                            )}
+                        </div>
+
+                        <div class="error-subtitle">
+                            ${escapeHTML(
+                                descriptionText
+                            )}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="error-tip">
+
+                    <div class="error-tip-title">
+                        Things to check
+                    </div>
+
+                    <div>
+                        ${escapeHTML(
+                            tipText
+                        )}
+                    </div>
+
+                </div>
+
+
+                <details class="error-details">
+
+                    <summary>
+                        View technical details
+                    </summary>
+
+                    <pre>${escapeHTML(
+                        errorText
+                    )}</pre>
+
+                </details>
 
             </div>
         `;
@@ -1485,8 +2030,6 @@ function showServerError(
 
     renderProblemProgress();
 }
-
-
 
 /* ========================================= */
 /* GRADE OUTPUT                              */
@@ -1560,7 +2103,84 @@ function formatActual(
     );
 }
 
-function gradeOutput(
+
+
+/* ========================================= */
+/* CREATE RESULT CARD                        */
+/* ========================================= */
+
+function createResultCard(
+    testPassed,
+    testNumber,
+    test,
+    formattedActual
+)
+{
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        testPassed
+            ? "test-pass"
+            : "test-fail";
+
+
+    const symbol =
+        testPassed
+            ? "✓"
+            : "✕";
+
+
+    const status =
+        testPassed
+            ? "passed"
+            : "failed";
+
+
+    card.innerHTML =
+        `
+            ${symbol} <b>
+                Test ${testNumber} ${status}
+            </b>
+
+            <div class="result-detail">
+
+                Input:
+                ${escapeHTML(
+                    test.input
+                )}
+
+                <br>
+
+                Expected:
+                ${escapeHTML(
+                    test.expected
+                )}
+
+                <br>
+
+                Actual:
+                ${escapeHTML(
+                    formattedActual
+                )}
+
+            </div>
+        `;
+
+
+    return card;
+}
+
+
+
+/* ========================================= */
+/* GRADE OUTPUT                              */
+/* ========================================= */
+
+async function gradeOutput(
     output,
     problem
 )
@@ -1581,16 +2201,8 @@ function gradeOutput(
             );
 
 
-    let html =
-        "";
-
-
-    let passed =
-        0;
-
-
-    const dots =
-        testIndicators.children;
+    const testResults =
+        [];
 
 
     for (
@@ -1617,6 +2229,7 @@ function gradeOutput(
                 .slice(2)
                 .join("|");
 
+
         const formattedActual =
             formatActual(
                 actual,
@@ -1624,8 +2237,69 @@ function gradeOutput(
             );
 
 
+        testResults.push(
+            {
+                passed:
+                    testPassed,
+
+                actual:
+                    formattedActual
+            }
+        );
+    }
+
+
+    /*
+        Clear the "Running tests..." message.
+
+        The test cards will now be inserted one at a
+        time so the student can see the grader work
+        through the tests.
+    */
+    results.innerHTML =
+        "";
+
+
+    passedCount.textContent =
+        "0";
+
+
+    totalCount.textContent =
+        problem.tests.length;
+
+
+    testProgressBar.style.width =
+        "0%";
+
+
+    createTestIndicators(
+        problem.tests.length
+    );
+
+
+    const dots =
+        testIndicators.children;
+
+
+    let passed =
+        0;
+
+
+    /*
+        Reveal each test one at a time.
+    */
+    for (
+        let i = 0;
+        i < problem.tests.length;
+        ++i
+    )
+    {
+        const currentResult =
+            testResults[i];
+
+
         if (
-            testPassed
+            currentResult.passed
         )
         {
             ++passed;
@@ -1638,44 +2312,6 @@ function gradeOutput(
 
             dots[i].textContent =
                 "✓";
-
-
-            html +=
-                `
-                    <div
-                        class="test-pass"
-                        style="animation-delay: ${i * 0.04}s"
-                    >
-
-                        ✓ <b>
-                            Test ${i + 1} passed
-                        </b>
-
-                        <div class="result-detail">
-
-                            Input:
-                            ${escapeHTML(
-                                problem.tests[i].input
-                            )}
-
-                            <br>
-
-                            Expected:
-                            ${escapeHTML(
-                                problem.tests[i].expected
-                            )}
-
-                            <br>
-
-                            Actual:
-                            ${escapeHTML(
-                                formattedActual
-                            )}
-
-                        </div>
-
-                    </div>
-                `;
         }
 
         else
@@ -1687,89 +2323,96 @@ function gradeOutput(
 
             dots[i].textContent =
                 "✕";
-
-
-            html +=
-                `
-                    <div
-                        class="test-fail"
-                        style="animation-delay: ${i * 0.04}s"
-                    >
-
-                        ✕ <b>
-                            Test ${i + 1} failed
-                        </b>
-
-                        <div class="result-detail">
-
-                            Input:
-                            ${escapeHTML(
-                                problem.tests[i].input
-                            )}
-
-                            <br>
-
-                            Expected:
-                            ${escapeHTML(
-                                problem.tests[i].expected
-                            )}
-
-                            <br>
-
-                            Actual:
-                            ${escapeHTML(
-                                actual === ""
-                                    ? "No valid result"
-                                    : actual
-                            )}
-
-                        </div>
-
-                    </div>
-                `;
         }
+
+
+        const card =
+            createResultCard(
+                currentResult.passed,
+                i + 1,
+                problem.tests[i],
+                currentResult.actual
+            );
+
+
+        results.appendChild(
+            card
+        );
+
+
+        /*
+            Update the score as each test appears.
+        */
+        passedCount.textContent =
+            passed;
+
+
+        const progress =
+            (
+                (i + 1) /
+                problem.tests.length
+            ) * 100;
+
+
+        testProgressBar.style.width =
+            `${progress}%`;
+
+
+        /*
+            Keep the newest result visible if the
+            results area needs to scroll.
+        */
+        card.scrollIntoView(
+            {
+                behavior:
+                    "smooth",
+
+                block:
+                    "nearest"
+            }
+        );
+
+
+        /*
+            Small pause before revealing the next test.
+        */
+        await wait(
+            350
+        );
     }
 
 
-    const percentage =
-        (
-            passed /
-            problem.tests.length
-        ) * 100;
+    /*
+        Add the final result summary only after all
+        individual tests have been revealed.
+    */
+    const summary =
+        document.createElement(
+            "div"
+        );
 
 
-    passedCount.textContent =
-        passed;
+    summary.className =
+        "result-summary";
 
 
-    totalCount.textContent =
-        problem.tests.length;
-
-
-    testProgressBar.style.width =
-        `${percentage}%`;
-
-
-    html +=
+    summary.innerHTML =
         `
-            <div class="result-summary">
+            <span>
+                Tests completed
+            </span>
 
-                <span>
-                    Tests completed
-                </span>
-
-                <strong>
-                    ${passed} /
-                    ${problem.tests.length}
-                    passed
-                </strong>
-
-            </div>
+            <strong>
+                ${passed} /
+                ${problem.tests.length}
+                passed
+            </strong>
         `;
 
 
-    results.innerHTML =
-        html;
+    results.appendChild(
+        summary
+    );
 
 
     if (
