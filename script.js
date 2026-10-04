@@ -478,6 +478,8 @@ const savedCode = {};
 
 const savedResults = {};
 
+const attemptedProblems = {};
+
 const completedProblems = {};
 
 
@@ -823,6 +825,71 @@ function renderProblemProgress()
             "problem-step";
 
 
+        /*
+            A problem can have one of three states:
+
+            1. Not attempted
+            2. Attempted
+            3. Completed
+        */
+        if (
+            completedProblems[i]
+        )
+        {
+            button.classList.add(
+                "completed"
+            );
+
+
+            button.textContent =
+                "✓";
+
+
+            button.setAttribute(
+                "aria-label",
+                `Problem ${i + 1}, completed`
+            );
+
+
+            ++completedCount;
+        }
+
+        else if (
+            attemptedProblems[i]
+        )
+        {
+            button.classList.add(
+                "attempted"
+            );
+
+
+            button.textContent =
+                i + 1;
+
+
+            button.setAttribute(
+                "aria-label",
+                `Problem ${i + 1}, attempted`
+            );
+        }
+
+        else
+        {
+            button.textContent =
+                i + 1;
+
+
+            button.setAttribute(
+                "aria-label",
+                `Problem ${i + 1}, not attempted`
+            );
+        }
+
+
+        /*
+            The current problem gets its own state
+            in addition to attempted/completed.
+        */
         if (
             i === currentProblem
         )
@@ -833,29 +900,12 @@ function renderProblemProgress()
         }
 
 
-        if (
-            completedProblems[i]
-        )
-        {
-            button.classList.add(
-                "completed"
-            );
-
-            button.textContent =
-                "✓";
-
-            ++completedCount;
-        }
-
-        else
-        {
-            button.textContent =
-                i + 1;
-        }
-
-
         button.title =
-            `Problem ${i + 1}`;
+            completedProblems[i]
+                ? `Problem ${i + 1} — Completed`
+                : attemptedProblems[i]
+                    ? `Problem ${i + 1} — Attempted`
+                    : `Problem ${i + 1} — Not attempted`;
 
 
         button.disabled =
@@ -895,7 +945,7 @@ function renderProblemProgress()
 
 
     progressCount.textContent =
-        `${completedCount} / ${problems.length}`;
+        `${completedCount} / ${problems.length} completed`;
 
 
     updateControls();
@@ -1275,6 +1325,11 @@ resetButton.addEventListener(
         ];
 
 
+        delete attemptedProblems[
+            currentProblem
+        ];
+
+
         delete completedProblems[
             currentProblem
         ];
@@ -1325,11 +1380,21 @@ async function runTests()
         currentProblem;
 
 
+
     saveCurrentCode();
+
+
+    attemptedProblems[
+        currentProblem
+    ] =
+        true;
 
 
     testsRunning =
         true;
+
+
+    renderProblemProgress();
 
 
     runButton.disabled =
@@ -1783,6 +1848,11 @@ function showCompileError(
         currentProblem
     ];
 
+    attemptedProblems[
+    currentProblem
+    ] =
+        true;
+
 
     const errorInfo =
         getCompilerErrorInfo(
@@ -1921,6 +1991,11 @@ function showServerError(
     delete completedProblems[
         currentProblem
     ];
+
+    attemptedProblems[
+        currentProblem
+        ] =
+            true;
 
 
     const errorText =
@@ -2415,29 +2490,89 @@ async function gradeOutput(
     );
 
 
+    const wasAlreadyCompleted =
+    completedProblems[
+        currentProblem
+    ] === true;
+
+
+attemptedProblems[
+    currentProblem
+] =
+    true;
+
+
+if (
+    passed ===
+    problem.tests.length
+)
+{
+    completedProblems[
+        currentProblem
+    ] =
+        true;
+}
+
+else
+{
+    delete completedProblems[
+        currentProblem
+    ];
+}
+
+
+saveResultState();
+
+
+renderProblemProgress();
+
+
+/*
+    Only play the completion animation when the
+    problem changes from incomplete to completed.
+
+    Re-running an already completed problem will
+    not replay the animation every time.
+*/
+if (
+    passed ===
+        problem.tests.length &&
+    !wasAlreadyCompleted
+)
+{
+    const currentStep =
+        problemProgress.querySelector(
+            ".problem-step.current"
+        );
+
+
     if (
-        passed ===
-        problem.tests.length
+        currentStep !== null
     )
     {
-        completedProblems[
-            currentProblem
-        ] =
-            true;
+        currentStep.classList.add(
+            "just-completed"
+        );
+
+
+        setTimeout(
+            () =>
+            {
+                currentStep.classList.remove(
+                    "just-completed"
+                );
+            },
+
+            700
+        );
     }
-
-    else
-    {
-        delete completedProblems[
-            currentProblem
-        ];
-    }
+}
 
 
-    saveResultState();
+    //saveResultState();
 
 
-    renderProblemProgress();
+    //renderProblemProgress();
 }
 
 

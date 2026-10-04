@@ -2766,3 +2766,256 @@ body.resizing-panels
     color:
         white;
 }
+
+/* ========================================= */
+/* PRACTICE PROGRESS STATES                  */
+/* ========================================= */
+
+
+/*
+    NOT ATTEMPTED
+
+    Uses the normal .problem-step styling
+    already defined earlier in the stylesheet.
+*/
+
+
+/* ========================================= */
+/* ATTEMPTED                                 */
+/* ========================================= */
+
+.problem-step.attempted
+{
+    position:
+        relative;
+
+    border-color:
+        #e3ad4d;
+
+    background:
+        #fff8e8;
+
+    color:
+        #a36a0b;
+
+    font-weight:
+        800;
+}
+
+
+.problem-step.attempted:hover:not(:disabled)
+{
+    border-color:
+        #d99a2b;
+
+    background:
+        #fff3d3;
+
+    color:
+        #895706;
+
+    transform:
+        translateY(-1px);
+}
+
+
+/*
+    Small status dot.
+
+    This makes attempted problems easy to
+    distinguish without replacing the problem
+    number.
+*/
+
+.problem-step.attempted::after
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    right:
+        2px;
+
+    bottom:
+        2px;
+
+    width:
+        5px;
+
+    height:
+        5px;
+
+    border-radius:
+        50%;
+
+    background:
+        #e3a43a;
+
+    box-shadow:
+        0 0 0 2px
+        #fff8e8;
+}
+
+
+
+/* ========================================= */
+/* CURRENT + ATTEMPTED                       */
+/* ========================================= */
+
+.problem-step.current.attempted
+{
+    border-color:
+        #6684e8;
+
+    background:
+        #eef2ff;
+
+    color:
+        #3e5bc2;
+}
+
+
+.problem-step.current.attempted::after
+{
+    background:
+        #e3a43a;
+
+    box-shadow:
+        0 0 0 2px
+        #eef2ff;
+}
+
+
+
+/* ========================================= */
+/* COMPLETED                                 */
+/* ========================================= */
+
+.problem-step.completed
+{
+    position:
+        relative;
+}
+
+
+
+/* ========================================= */
+/* JUST COMPLETED                            */
+/* ========================================= */
+
+.problem-step.just-completed
+{
+    animation:
+        problemCompleted
+        0.65s
+        ease;
+}
+
+
+@keyframes problemCompleted
+{
+    0%
+    {
+        transform:
+            scale(1);
+    }
+
+    30%
+    {
+        transform:
+            scale(1.22);
+    }
+
+    55%
+    {
+        transform:
+            scale(0.94);
+    }
+
+    75%
+    {
+        transform:
+            scale(1.08);
+    }
+
+    100%
+    {
+        transform:
+            scale(1);
+    }
+}
+
+
+
+/* ========================================= */
+/* COMPLETED CHECK APPEARANCE                */
+/* ========================================= */
+
+.problem-step.just-completed::before
+{
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        -5px;
+
+    border:
+        2px solid
+        rgba(75, 164, 99, 0.35);
+
+    border-radius:
+        50%;
+
+    animation:
+        completionRing
+        0.65s
+        ease-out;
+}
+
+
+@keyframes completionRing
+{
+    0%
+    {
+        opacity:
+            0;
+
+        transform:
+            scale(0.7);
+    }
+
+    35%
+    {
+        opacity:
+            1;
+    }
+
+    100%
+    {
+        opacity:
+            0;
+
+        transform:
+            scale(1.35);
+    }
+}
+
+
+
+/* ========================================= */
+/* PROGRESS TEXT                             */
+/* ========================================= */
+
+#progress-count
+{
+    white-space:
+        nowrap;
+
+    font-weight:
+        750;
+}
