@@ -1492,6 +1492,74 @@ function showServerError(
 /* GRADE OUTPUT                              */
 /* ========================================= */
 
+function formatActual(
+    actual,
+    problemId
+)
+{
+    const cleaned =
+        actual.trim();
+
+
+    if (
+        cleaned === ""
+    )
+    {
+        return "No valid result";
+    }
+
+
+    /*
+        Boolean results should stay as:
+        true
+        false
+    */
+    if (
+        problemId === "search"
+    )
+    {
+        return cleaned;
+    }
+
+
+    /*
+        exchangeFirst has two DArrays in its result,
+        so keep the grader's formatted output.
+    */
+    if (
+        problemId === "exchangeFirst"
+    )
+    {
+        return cleaned;
+    }
+
+
+    /*
+        All remaining problems return one DArray.
+        The graders print values separated by spaces.
+
+        Example:
+            6 5 3
+
+        Display as:
+            [6, 5, 3]
+    */
+    const values =
+        cleaned
+            .split(/\s+/)
+            .filter(
+                value =>
+                    value !== ""
+            );
+
+
+    return (
+        "[" +
+        values.join(", ") +
+        "]"
+    );
+}
+
 function gradeOutput(
     output,
     problem
@@ -1549,6 +1617,12 @@ function gradeOutput(
                 .slice(2)
                 .join("|");
 
+        const formattedActual =
+            formatActual(
+                actual,
+                problem.id
+            );
+
 
         if (
             testPassed
@@ -1595,9 +1669,7 @@ function gradeOutput(
 
                             Actual:
                             ${escapeHTML(
-                                actual === ""
-                                    ? problem.tests[i].expected
-                                    : actual
+                                formattedActual
                             )}
 
                         </div>
